@@ -15,4 +15,5 @@
     <string name="project_profit">Project Profit</string>
     <string name="tags">Tags</string>
     <string name="time_per_day">Time per day</string>
+    <string name="location">Location</string>
 </resources>

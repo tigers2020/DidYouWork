@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
@@ -136,7 +137,17 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                             Dialog dialog = new Dialog(context);
                             dialog.setTitle("set Wage");
                             dialog.setContentView(R.layout.dialog_wage);
+                            NumberPicker hourPick = (NumberPicker) dialog.findViewById(R.id.number_pick_hour);
+                            NumberPicker minsPick = (NumberPicker) dialog.findViewById(R.id.number_pick_mins);
+
+
                             dialog.show();
+
+                            hourPick.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                                @Override
+                                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                }
+                            });
 
 
                         }
