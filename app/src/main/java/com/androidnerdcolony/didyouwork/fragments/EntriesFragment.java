@@ -7,13 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidnerdcolony.didyouwork.R;
+
 /**
  * Created by tiger on 5/2/2017.
  */
 
 public class EntriesFragment extends Fragment {
 
-    EntriesFragment newIntance(){
+    public static EntriesFragment newIntance(){
         EntriesFragment fragment = new EntriesFragment();
         return fragment;
     }
@@ -21,6 +23,8 @@ public class EntriesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_entries, container, false);
+
+        return view;
     }
 }

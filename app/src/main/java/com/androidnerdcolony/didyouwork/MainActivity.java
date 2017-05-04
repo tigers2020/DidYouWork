@@ -1,16 +1,21 @@
 package com.androidnerdcolony.didyouwork;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+
+import com.androidnerdcolony.didyouwork.fragments.EntriesFragment;
+import com.androidnerdcolony.didyouwork.fragments.MoreFragment;
+import com.androidnerdcolony.didyouwork.fragments.PeriodsFragment;
+import com.androidnerdcolony.didyouwork.fragments.ProjectsFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,13 +23,10 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.bottom_navigation_view)
-    BottomNavigationView bottomNavigationMenu;
+    @BindView(R.id.navigation)
+    TabLayout navigationView;
     @BindView(R.id.main_project_list)
     ViewPager projectListView;
-
-    @BindView(R.id.fab_create_new_project)
-    FloatingActionButton createNewProjectButton;
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,37 +36,61 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         //// TODO: 5/1/2017 Design layouts
 
-        bottomNavigationMenu.inflateMenu(R.menu.menu_bottom_nav);
-        bottomNavigationMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        NaviFragmentAdapter adapter = new NaviFragmentAdapter(getSupportFragmentManager(), context);
+
+        adapter.addFragment(ProjectsFragment.newIntance(), getString(R.string.project));
+        adapter.addFragment(EntriesFragment.newIntance(), getString(R.string.entries));
+        adapter.addFragment(PeriodsFragment.newIntance(), getString(R.string.periods));
+        adapter.addFragment(MoreFragment.newIntance(), getString(R.string.more));
+
+        projectListView.setAdapter(adapter);
+        navigationView.setupWithViewPager(projectListView);
+
+        navigationView.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.action_project_list:
-                        Toast.makeText(context, "project list", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.action_entries_list:
-                        Toast.makeText(context, "entries list", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.action_periods_list:
-                        Toast.makeText(context, "periods list", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.action_more_list:
-                        Toast.makeText(context, "more list", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                return true;
+            public void onTabSelected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+    }
+    public class NaviFragmentAdapter extends FragmentPagerAdapter{
 
-        createNewProjectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.dialog_create_project);
-                dialog.setTitle("Create Project");
+        List<Fragment> mFragmentList = new ArrayList<>();
+        List<String> mFragmentTitleList = new ArrayList<>();
 
-                dialog.show();
-            }
-        });
+        private Context context;
+        public NaviFragmentAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            this.context = context;
+        }
+
+        void addFragment(Fragment fragment, String title){
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 }

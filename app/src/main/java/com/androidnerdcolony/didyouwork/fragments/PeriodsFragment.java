@@ -11,7 +11,7 @@ import android.view.View;
 
 public class PeriodsFragment extends Fragment {
 
-    PeriodsFragment newIntance(){
+    public static PeriodsFragment newIntance(){
         PeriodsFragment fragment = new PeriodsFragment();
         return fragment;
     }

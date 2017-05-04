@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Did You Work?</string>
+    <string name="project">Projects</string>
+    <string name="entries">Entries</string>
+    <string name="periods">Periods</string>
+    <string name="more">More</string>
 </resources>
