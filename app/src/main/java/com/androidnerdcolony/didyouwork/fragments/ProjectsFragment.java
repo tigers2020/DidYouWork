@@ -24,7 +24,7 @@ public class ProjectsFragment extends Fragment {
     @BindView(R.id.fab_create_new_project)
     FloatingActionButton createNewProjectButton;
     Unbinder mUnbinder;
-    public static ProjectsFragment newIntance(){
+    public static ProjectsFragment newInstance(){
         ProjectsFragment fragment = new ProjectsFragment();
         return fragment;
     }

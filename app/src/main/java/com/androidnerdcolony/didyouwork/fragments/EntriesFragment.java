@@ -15,7 +15,7 @@ import com.androidnerdcolony.didyouwork.R;
 
 public class EntriesFragment extends Fragment {
 
-    public static EntriesFragment newIntance(){
+    public static EntriesFragment newInstance(){
         EntriesFragment fragment = new EntriesFragment();
         return fragment;
     }

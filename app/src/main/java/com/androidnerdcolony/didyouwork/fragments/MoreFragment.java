@@ -18,7 +18,7 @@ public class MoreFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public static MoreFragment newIntance(){
+    public static MoreFragment newInstance(){
         MoreFragment fragment = new MoreFragment();
         return fragment;
     }

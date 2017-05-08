@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/label_project_name"
+            style="@style/labelTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Project Name"/>
+
+        <TextView
+            android:id="@+id/project_name"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Did you Work?"
+            app:layout_constraintLeft_toRightOf="@id/label_project_name"/>
+
+        <TextView
+            android:id="@+id/label_location"
+            style="@style/labelTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            app:layout_constraintTop_toBottomOf="@id/label_project_name"/>
+
+        <TextView
+            android:id="@+id/location"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:hint="Friendship, NY"
+            app:layout_constraintBottom_toBottomOf="@+id/label_location"
+            app:layout_constraintLeft_toRightOf="@id/label_location"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/project_type"
+            style="@style/labelTextViewStyle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:hint="project Type"/>
+        <TextView
+            android:id="@+id/label_hourly_pay"
+            style="@style/labelTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Hourly Pay"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/project_type"/>
+
+        <TextView
+            android:id="@+id/hourly_pay"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="$25.99"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/label_hourly_pay"
+            app:layout_constraintRight_toRightOf="@+id/label_hourly_pay"
+            app:layout_constraintTop_toBottomOf="@+id/label_hourly_pay"
+            app:layout_constraintVertical_bias="0.5"/>
+
+        <TextView
+            android:id="@+id/label_last_time_work"
+            style="@style/labelTextViewStyle"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:text="last time work"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_location"/>
+
+        <TextView
+            android:id="@+id/last_time_work"
+            style="@style/textViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="2017-04-25"
+            app:layout_constraintBottom_toBottomOf="@+id/label_last_time_work"
+            app:layout_constraintLeft_toRightOf="@+id/label_last_time_work"/>
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

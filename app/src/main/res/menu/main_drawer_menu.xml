@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
+    <item
+        android:id="@+id/action_list_of_project"
+        android:enabled="true"
+        android:icon="@drawable/ic_project"
+        android:title="List of Project"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_entries_list"
         android:enabled="true"
         android:icon="@drawable/ic_entries"
-        android:title="Entries"
+        android:title="List of All Entries"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_periods_list"
+        android:id="@+id/action_settings"
         android:enabled="true"
-        android:title="Periods"
-        android:icon="@drawable/ic_calendar"
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_more_list"
-        android:enabled="true"
-        android:title="more"
         android:icon="@drawable/ic_more_horiz"
+        android:title="Settings"
         app:showAsAction="ifRoom"/>
 </menu>
