@@ -8,4 +8,11 @@
     <string name="navigation_drawer_close">Navigation Drawer Close</string>
     <string name="profile_image">Profile Image</string>
     <string name="project_name">Project Name</string>
+    <string name="wage_type">Wage Type</string>
+    <string name="cannot_query_unknown_uri">Can not Query Unknown Uri</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="project_profit">Project Profit</string>
+    <string name="tags">Tags</string>
+    <string name="time_per_day">Time per day</string>
 </resources>
