@@ -1,7 +1,6 @@
 package com.androidnerdcolony.didyouwork.activities;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,25 +9,22 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +33,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CreateProjectActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -47,13 +44,13 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
     @BindView(R.id.tag_list)
     LinearLayout tagListView;
     @BindView(R.id.project_profit)
-    TextView projectProfitView;
+    EditText projectWageView;
     @BindView(R.id.time_per_day)
-    TextView projectTimePerDayView;
+    EditText projectTimePerDayView;
     @BindView(R.id.wage_type)
     Spinner wageTypeSpinner;
     @BindView(R.id.label_project_time_per_day)
-            TextView labelTimePerView;
+    TextView labelTimePerView;
     Context context;
     boolean stringDel = false;
     Calendar c = Calendar.getInstance();
@@ -69,6 +66,7 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_project);
         context = this;
+        values = new ContentValues();
 
         ButterKnife.bind(this);
 
@@ -89,30 +87,136 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
             }
         });
+        projectWageView.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals(current)) {
+                    projectWageView.removeTextChangedListener(this);
+
+                    String replaceable = String.format("[$s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
+                    String cleanString = s.toString().replaceAll(replaceable, "");
+
+                    double parsed;
+                    try {
+                        parsed = Double.parseDouble(cleanString);
+                    } catch (NumberFormatException e) {
+                        parsed = 0.00;
+                    }
+
+                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+
+                    current = formatted;
+                    projectWageView.setText(formatted);
+                    projectWageView.setSelection(formatted.length());
+                    projectWageView.addTextChangedListener(this);
+                }
+
+            }
+        });
+        projectTimePerDayView.addTextChangedListener(new TextWatcher() {
+            String currentTime = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals(currentTime)) {
+                    projectWageView.removeTextChangedListener(this);
+                    Timber.d("original" + s.toString());
+                    String replaceable = "[,.:\\s]";
+                    String cleanString = s.toString().replaceAll(replaceable, "");
+                    Timber.d("cleaned" + cleanString);
+                    double parsed;
+                    try {
+                        parsed = Double.parseDouble(cleanString);
+                    } catch (NumberFormatException e) {
+                        parsed = 0.00;
+                    }
+                    Timber.d("parsed" + parsed);
+                    int hour = (int) parsed / 100;
+                    int min = (int) parsed - (hour * 100);
+
+                    if (min > 60){
+                        hour = hour + (min / 60);
+                        min = min % 60;
+                    }
+
+                    if (hour > 24) {
+                        hour = 24;
+                    }
+
+                    String formatted = String.format("%d:%02d", hour, min);
+                    Timber.d("formatted" + formatted);
+                    currentTime = formatted;
+                    projectTimePerDayView.append(formatted);
+                    projectTimePerDayView.setSelection(formatted.length());
+                    projectTimePerDayView.addTextChangedListener(this);
+                }
+            }
+        });
 
         setTagClipper();
-        setProjectProfitDialog();
-        setwageSpinner();
+        setWageSpinner();
 
 
     }
 
-    private void setwageSpinner() {
+    private void setWageSpinner() {
         wageTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
                 String temp;
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, position);
-                wageType = position;
+                String timeString = "";
                 if (position != 0) {
-                    labelTimePerView.setText(String.valueOf(parent.getItemAtPosition(position)));
-
-                }
-                if (position == 5){
-                    projectTimePerDayView.setText("Dead Line");
-                }else {
-                    projectTimePerDayView.setText("00:00");
+                    switch (position) {
+                        case 1:
+                            timeString = " / Per Hour";
+                            break;
+                        case 2:
+                            timeString = " / Per Week";
+                            break;
+                        case 3:
+                            timeString = " / Per Month";
+                            break;
+                        case 4:
+                            timeString = " / Per year";
+                            break;
+                        case 5:
+                            timeString = " / Per Project";
+                            break;
+                        default:
+                            timeString = "";
+                            break;
+                    }
+                    if (position == 5) {
+                        timeString = "Dead Line";
+                        projectTimePerDayView.setText("Dead Line");
+                    } else {
+                        projectTimePerDayView.setText("00:00" + timeString);
+                    }
                 }
 
                 projectTimePerDayView.setOnClickListener(new View.OnClickListener() {
@@ -132,44 +236,12 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
                             };
                             new DatePickerDialog(context, date, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-                        }else{
-                            Dialog dialog = new Dialog(context);
-                            dialog.setTitle("set Wage");
-                            dialog.setContentView(R.layout.dialog_wage);
-                            dialog.show();
 
 
                         }
 
                     }
                 });
-//                switch (position){
-//                    case 1:
-//                        temp = "Hourly paid";
-//                        projectTimePerDayView.setText("$00.00");
-//                        break;
-//                    case 2:
-//                        temp = "Weekly paid";
-//                        projectTimePerDayView.setText("$00.00");
-//                        break;
-//                    case 3:
-//                        temp = "Monthly paid";
-//                        projectTimePerDayView.setText("$00.00");
-//                        break;
-//                    case 4:
-//                        temp = "Yearly paid";
-//                        projectTimePerDayView.setText("$00.00");
-//                        break;
-//                    case 5:
-//                        temp = "Dead line";
-//                        projectTimePerDayView.setText("Dead Line");
-//
-//                        break;
-//                    default:
-//                        temp = "None Selected";
-//                        projectTimePerDayView.setText("Select Payment Type");
-//                        break;
-//                }
             }
 
             @Override
@@ -188,8 +260,7 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_cancel:
                 finish();
                 return true;
@@ -206,47 +277,6 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         projectTimePerDayView.setText(sdf.format(c.getTime()));
         values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, c.getTimeInMillis());
-    }
-
-    private void setProjectProfitDialog() {
-        projectProfitView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "profit clicked", Toast.LENGTH_SHORT).show();
-                final Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.dialog_profit);
-                dialog.setTitle("Fix Profit");
-                final EditText profitInput = (EditText) dialog.findViewById(R.id.input_profit);
-                Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
-                Button btnDone = (Button) dialog.findViewById(R.id.btn_done);
-
-                final String profitString = profitInput.getText().toString();
-
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!TextUtils.isEmpty(profitString)) {
-                            projectProfitView.setText(profitString);
-                            int wage = Integer.valueOf(profitString);
-                            values.put(DywContract.DywEntries.COLUMN_PROJECT_WAGE, wage);
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(context, "need input Profits", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                dialog.show();
-            }
-
-        });
     }
 
     private void setTagClipper() {
