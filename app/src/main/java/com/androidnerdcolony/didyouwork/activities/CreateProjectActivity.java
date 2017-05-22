@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
@@ -141,35 +142,41 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (!s.toString().equals(currentTime)) {
-                    projectWageView.removeTextChangedListener(this);
+                    projectTimePerDayView.removeTextChangedListener(this);
                     Timber.d("original" + s.toString());
-                    String replaceable = "[,.:\\s]";
+                    String replaceable = "[^\\d.]";
                     String cleanString = s.toString().replaceAll(replaceable, "");
                     Timber.d("cleaned" + cleanString);
+
                     double parsed;
                     try {
-                        parsed = Double.parseDouble(cleanString);
+                        parsed = Integer.parseInt(cleanString);
                     } catch (NumberFormatException e) {
                         parsed = 0.00;
                     }
+
                     Timber.d("parsed" + parsed);
                     int hour = (int) parsed / 100;
                     int min = (int) parsed - (hour * 100);
 
-                    if (min > 60){
-                        hour = hour + (min / 60);
-                        min = min % 60;
-                    }
+                    if (parsed > 100) {
+                        if (min > 59) {
+                            hour = hour + (min / 60);
+                            min = min % 60;
+                        }
 
-                    if (hour > 24) {
-                        hour = 24;
+                        if (hour > 24) {
+                            hour = 24;
+                            Toast.makeText(context, "You can't work more than 24 hours per day", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     String formatted = String.format("%d:%02d", hour, min);
                     Timber.d("formatted" + formatted);
                     currentTime = formatted;
-                    projectTimePerDayView.append(formatted);
+                    projectTimePerDayView.setText(currentTime);
                     projectTimePerDayView.setSelection(formatted.length());
                     projectTimePerDayView.addTextChangedListener(this);
                 }
