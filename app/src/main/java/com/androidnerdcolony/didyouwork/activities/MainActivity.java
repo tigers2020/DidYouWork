@@ -1,7 +1,9 @@
 package com.androidnerdcolony.didyouwork.activities;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,9 +18,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
+import com.androidnerdcolony.didyouwork.data.DywContract;
 import com.androidnerdcolony.didyouwork.fragments.EntriesFragment;
 import com.androidnerdcolony.didyouwork.fragments.MoreFragment;
 import com.androidnerdcolony.didyouwork.fragments.ProjectsFragment;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +54,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent intent = new Intent(this, CreateProjectActivity.class);
-        startActivity(intent);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = ProjectsFragment.newInstance();
+
+        fm.beginTransaction().replace(R.id.main_content, fragment, fragment.getTag()).commit();
 
 
 
@@ -70,10 +77,33 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        Fragment fragment;
+        Fragment fragment = fragment = ProjectsFragment.newInstance();
+
         FragmentManager fm = getSupportFragmentManager();
         switch (item.getItemId())
         {
+            case R.id.action_add_temp_data:
+                ContentValues values = new ContentValues();
+
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, "test name");
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_WAGE, 24.50);
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_LOCATION, "[24, 52]");
+                long time = Calendar.getInstance().getTimeInMillis();
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE, time);
+                values.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "android, tag, etc");
+                long deadline = time + 13600;
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, deadline);
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_TIME_ROUNDING, 30);
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 1);
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "test project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\n");
+                Uri uri = getContentResolver().insert(DywContract.DywEntries.CONTENT_PROJECT_URI, values);
+                long id = 0;
+                if (uri != null){
+                    id = ContentUris.parseId(uri);
+
+                    Toast.makeText(context, "Data been Added " + id, Toast.LENGTH_SHORT).show();
+                }
+                break;
             case R.id.action_list_of_project:
                 Toast.makeText(context, "List of Project", Toast.LENGTH_SHORT).show();
                 fragment = ProjectsFragment.newInstance();

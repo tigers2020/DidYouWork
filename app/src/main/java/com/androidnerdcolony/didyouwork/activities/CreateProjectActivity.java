@@ -1,14 +1,13 @@
 package com.androidnerdcolony.didyouwork.activities;
 
 import android.app.DatePickerDialog;
-import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Loader;
-import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.data.DywContract.DywEntries;
+import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class CreateProjectActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CreateProjectActivity extends AppCompatActivity{
 
     @BindView(R.id.project_name)
     EditText projectNameView;
@@ -52,6 +52,8 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
     Spinner wageTypeSpinner;
     @BindView(R.id.label_project_time_per_day)
     TextView labelTimePerView;
+    @BindView(R.id.project_description)
+            EditText descriptionView;
     Context context;
     boolean stringDel = false;
     Calendar c = Calendar.getInstance();
@@ -84,7 +86,7 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
             @Override
             public void afterTextChanged(Editable s) {
-                values.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, s.toString());
+                values.put(DywEntries.COLUMN_PROJECT_NAME, s.toString());
 
             }
         });
@@ -116,6 +118,8 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                     } catch (NumberFormatException e) {
                         parsed = 0.00;
                     }
+
+                    values.put(DywEntries.COLUMN_PROJECT_WAGE, parsed);
 
                     String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
 
@@ -161,7 +165,7 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                     int hour = (int) parsed / 100;
                     int min = (int) parsed - (hour * 100);
 
-                    if (parsed > 100) {
+                    if (parsed > 60) {
                         if (min > 59) {
                             hour = hour + (min / 60);
                             min = min % 60;
@@ -173,6 +177,10 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                         }
                     }
 
+                    long timeMillis = (hour * 60 * 60) + (min * 60);
+
+                    values.put(DywEntries.COLUMN_PROJECT_WORK_TIME, timeMillis);
+
                     String formatted = String.format("%d:%02d", hour, min);
                     Timber.d("formatted" + formatted);
                     currentTime = formatted;
@@ -183,6 +191,24 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
             }
         });
 
+
+        descriptionView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                values.put(DywEntries.COLUMN_PROJECT_DESCRIPTION, s.toString());
+
+            }
+        });
         setTagClipper();
         setWageSpinner();
 
@@ -193,26 +219,24 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
         wageTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-
-                String temp;
-                values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, position);
-                String timeString = "";
+                values.put(DywEntries.COLUMN_PROJECT_TYPE, position);
+                String timeString;
                 if (position != 0) {
                     switch (position) {
                         case 1:
-                            timeString = " / Per Hour";
+                            timeString = "Per Hour";
                             break;
                         case 2:
-                            timeString = " / Per Week";
+                            timeString = "Per Week";
                             break;
                         case 3:
-                            timeString = " / Per Month";
+                            timeString = "Per Month";
                             break;
                         case 4:
-                            timeString = " / Per year";
+                            timeString = "Per year";
                             break;
                         case 5:
-                            timeString = " / Per Project";
+                            timeString = "Per Project";
                             break;
                         default:
                             timeString = "";
@@ -220,9 +244,9 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                     }
                     if (position == 5) {
                         timeString = "Dead Line";
-                        projectTimePerDayView.setText("Dead Line");
+                        labelTimePerView.setText("Dead Line");
                     } else {
-                        projectTimePerDayView.setText("00:00" + timeString);
+                        labelTimePerView.setText(timeString);
                     }
                 }
 
@@ -272,18 +296,50 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                 finish();
                 return true;
             case R.id.action_done:
-
+                Calendar c = Calendar.getInstance();
+                long timeNow = c.getTimeInMillis();
+                values.put(DywEntries.COLUMN_PROJECT_CREATED_DATE, timeNow);
+                if (checkingValues()) {
+                    createProject();
+                }else {
+                 return false;
+                }
                 return true;
             default:
                 return false;
         }
     }
 
+    private boolean checkingValues() {
+        String projectName = values.getAsString(DywEntries.COLUMN_PROJECT_NAME);
+        Double projectWage = values.getAsDouble(DywEntries.COLUMN_PROJECT_WAGE);
+        long projectWorkTime = values.getAsLong(DywEntries.COLUMN_PROJECT_WORK_TIME);
+        long projectDeadTIme = values.getAsLong(DywEntries.COLUMN_PROJECT_DEAD_LINE);
+        String projectTags = values.getAsString(DywEntries.COLUMN_PROJECT_TAGS);
+        String description = values.getAsString(DywEntries.COLUMN_PROJECT_DESCRIPTION);
+
+        if (projectName.isEmpty() && TextUtils.equals(projectName, "")){
+            Toast.makeText(context, "You Must Enter the Project Name", Toast.LENGTH_SHORT).show();
+            return false;
+        }if (projectWage == null && projectWage == 0.00){
+            Toast.makeText(context, "YOu Must Enter the Project Wage", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void createProject() {
+
+        Uri uri = getContentResolver().insert(DywEntries.CONTENT_PROJECT_URI, values);
+        getContentResolver().notifyChange(uri, null);
+    }
+
     private void updateDate() {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         projectTimePerDayView.setText(sdf.format(c.getTime()));
-        values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, c.getTimeInMillis());
+        values.put(DywEntries.COLUMN_PROJECT_DEAD_LINE, c.getTimeInMillis());
     }
 
     private void setTagClipper() {
@@ -306,8 +362,12 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
                 if (stringDel && s.length() != 0) {
                     String tag = s.toString();
                     tag = tag.subSequence(0, tag.length() - 1).toString();
-
-                    addTag(tag);
+                    if (tagList.contains(tag)){
+                        Toast.makeText(context, "tag " + tag + " is already exist", Toast.LENGTH_SHORT).show();
+                        tagsEditView.getText().clear();
+                    }else {
+                        addTag(tag);
+                    }
 
                 }
 
@@ -318,6 +378,11 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
     private void addTag(String tag) {
         tagList.add(tag);
+        Gson gson = new Gson();
+
+        String serializeTag = gson.toJson(tagList);
+        Timber.d(serializeTag);
+        values.put(DywEntries.COLUMN_PROJECT_TAGS, serializeTag);
         TextView textView = new TextView(context);
         textView.setText(tag);
         tagListView.addView(textView);
@@ -327,20 +392,5 @@ public class CreateProjectActivity extends AppCompatActivity implements LoaderMa
 
     private void delTag(String tag) {
         tagList.remove(tag);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }

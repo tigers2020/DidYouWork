@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_add_temp_data"
+        android:enabled="true"
+        android:title="Add Temp Data"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/action_list_of_project"
         android:enabled="true"
         android:icon="@drawable/ic_project"

@@ -45,16 +45,18 @@
             android:hint="Friendship, NY"
             app:layout_constraintBottom_toBottomOf="@+id/label_location"
             app:layout_constraintLeft_toRightOf="@id/label_location"/>
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/project_type"
             style="@style/labelTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="project Type"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:hint="project Type"/>
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
-            android:id="@+id/label_hourly_pay"
+            android:id="@+id/label_wage"
             style="@style/labelTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,19 +66,19 @@
             app:layout_constraintTop_toBottomOf="@id/project_type"/>
 
         <TextView
-            android:id="@+id/hourly_pay"
+            android:id="@+id/wage"
             style="@style/textViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="$25.99"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/label_hourly_pay"
-            app:layout_constraintRight_toRightOf="@+id/label_hourly_pay"
-            app:layout_constraintTop_toBottomOf="@+id/label_hourly_pay"
+            app:layout_constraintLeft_toLeftOf="@+id/label_wage"
+            app:layout_constraintRight_toRightOf="@+id/label_wage"
+            app:layout_constraintTop_toBottomOf="@+id/label_wage"
             app:layout_constraintVertical_bias="0.5"/>
 
         <TextView
-            android:id="@+id/label_last_time_work"
+            android:id="@+id/label_last_activity"
             style="@style/labelTextViewStyle"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
@@ -89,13 +91,13 @@
             app:layout_constraintTop_toBottomOf="@+id/label_location"/>
 
         <TextView
-            android:id="@+id/last_time_work"
+            android:id="@+id/last_activity"
             style="@style/textViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="2017-04-25"
-            app:layout_constraintBottom_toBottomOf="@+id/label_last_time_work"
-            app:layout_constraintLeft_toRightOf="@+id/label_last_time_work"/>
+            app:layout_constraintBottom_toBottomOf="@+id/label_last_activity"
+            app:layout_constraintLeft_toRightOf="@+id/label_last_activity"/>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

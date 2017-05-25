@@ -1,6 +1,7 @@
 package com.androidnerdcolony.didyouwork.data;
 
 import android.content.ContentResolver;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -8,14 +9,21 @@ import android.provider.BaseColumns;
  */
 
 public class DywContract {
+    public static final String CONTENT_AUTHORITY = "com.androidnerdcolony.didyouwork";
+    public static final String PATH_PROJECT = "project";
+    public static final String PATH_ENTRIES = "entries";
+    public static final String TABLE_PROJECT = PATH_PROJECT;
+    public static final String TABLE_ENTRIES = PATH_ENTRIES;
+
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+
     private DywContract(){}
 
     public static final class DywEntries implements BaseColumns{
-        public static final String CONTENT_AUTHORITY = "com.androidnerdcolony.didyouwork";
-        public static final String PATH_PROJECT = "project";
-        public static final String PATH_ENTRIES = "entries";
-       public static final String TABLE_PROJECT = PATH_PROJECT;
-        public static final String TABLE_ENTRIES = PATH_ENTRIES;
+
+        public static final Uri CONTENT_PROJECT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PROJECT).build();
+        public static final Uri CONTENT_ENTRIES_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ENTRIES).build();
 
         public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROJECT;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROJECT;
@@ -26,8 +34,10 @@ public class DywContract {
         public static final String COLUMN_PROJECT_CREATED_DATE = "create_date";
         public static final String COLUMN_PROJECT_TAGS = "tags";
         public static final String COLUMN_PROJECT_DEAD_LINE = "dead_line";
+        public static final String COLUMN_PROJECT_WORK_TIME = "work_time";
         public static final String COLUMN_PROJECT_TIME_ROUNDING = "time_rounding";
         public static final String COLUMN_PROJECT_TYPE = "project_type";
+        public static final String COLUMN_PROJECT_LAST_ACTIVITY = "last_activity";
         public static final String COLUMN_PROJECT_DESCRIPTION = "description";
 
         public static final String COLUMN_ENTRIES_PROJECT_ID = "project_id";
