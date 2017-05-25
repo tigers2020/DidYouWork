@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_add_temp_data"
+        android:id="@+id/action_add_temp_project"
         android:enabled="true"
-        android:title="Add Temp Data"
+        android:title="Add Temp Project"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_add_temp_entries"
+        android:enabled="true"
+        android:title="Add Temp Entries"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_list_of_project"

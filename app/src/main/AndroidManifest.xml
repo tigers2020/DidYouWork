@@ -21,10 +21,17 @@
         </activity>
         <activity android:name=".activities.CreateProjectActivity">
         </activity>
+
         <provider
+            android:name=".data.DywProvider"
             android:authorities="com.androidnerdcolony.didyouwork"
-            android:exported="false"
-            android:name=".data.DywProvider"/>
+            android:exported="false"/>
+
+        <activity
+            android:name=".activities.ProjectActivity"
+            android:label="@string/title_activity_project"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

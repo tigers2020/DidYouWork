@@ -1,14 +1,18 @@
 package com.androidnerdcolony.didyouwork.fragments.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
+import com.androidnerdcolony.didyouwork.activities.ProjectActivity;
+import com.androidnerdcolony.didyouwork.data.DywContract;
 import com.androidnerdcolony.didyouwork.fragments.ProjectsFragment;
 
 import butterknife.BindView;
@@ -66,7 +70,7 @@ public class ProjectRecyclerAdapter extends RecyclerView.Adapter<ProjectRecycler
 
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.project_name)
         TextView projectNameView;
@@ -81,7 +85,18 @@ public class ProjectRecyclerAdapter extends RecyclerView.Adapter<ProjectRecycler
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mCursor.moveToPosition(getLayoutPosition());
+            long projectId = mCursor.getLong(ProjectsFragment.INDEX_PROJECT_ID);
+            Toast.makeText(context, "projectId = " + projectId, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, ProjectActivity.class);
+            intent.putExtra(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
+            context.startActivity(intent);
         }
     }
 }

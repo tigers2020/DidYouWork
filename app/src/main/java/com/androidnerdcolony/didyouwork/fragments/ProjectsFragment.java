@@ -31,6 +31,7 @@ public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     private static final String[] PROJECT_PROJECTION = {
+            DywContract.DywEntries._ID,
             DywContract.DywEntries.COLUMN_PROJECT_NAME,
             DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE,
             DywContract.DywEntries.COLUMN_PROJECT_WAGE,
@@ -44,17 +45,18 @@ public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCa
             DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION
     };
 
-    public static final int INDEX_PROJECT_NAME = 0;
-    public static final int INDEX_PROJECT_CREATED_DATE = 1;
-    public static final int INDEX_PROJECT_WAGE = 2;
-    public static final int INDEX_PROJECT_LOCATION = 3;
-    public static final int INDEX_PROJECT_TAGS = 4;
-    public static final int INDEX_PROJECT_DEAD_LINE = 5;
-    public static final int INDEX_PROJECT_WORK_TIME = 6;
-    public static final int INDEX_PROJECT_TIME_ROUNDING = 7;
-    public static final int INDEX_PROJECT_TYPE = 8;
-    public static final int INDEX_PROJECT_LAST_ACTIVITY = 9;
-    public static final int INDEX_PROJECT_DESCRIPTION = 10;
+    public static final int INDEX_PROJECT_ID = 0;
+    public static final int INDEX_PROJECT_NAME = 1;
+    public static final int INDEX_PROJECT_CREATED_DATE = 2;
+    public static final int INDEX_PROJECT_WAGE = 3;
+    public static final int INDEX_PROJECT_LOCATION = 4;
+    public static final int INDEX_PROJECT_TAGS = 5;
+    public static final int INDEX_PROJECT_DEAD_LINE = 6;
+    public static final int INDEX_PROJECT_WORK_TIME = 7;
+    public static final int INDEX_PROJECT_TIME_ROUNDING = 8;
+    public static final int INDEX_PROJECT_TYPE = 9;
+    public static final int INDEX_PROJECT_LAST_ACTIVITY = 10;
+    public static final int INDEX_PROJECT_DESCRIPTION = 11;
 
     public static final int PROJECT_LOADER = 11;
 
@@ -82,12 +84,11 @@ public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCa
         projectListView.setAdapter(mAdapter);
         projectListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mLoaderManager = getLoaderManager();
-        Bundle bundle = new Bundle();
         Loader<Cursor> projectLoader = mLoaderManager.getLoader(PROJECT_LOADER);
         if (projectLoader == null){
-            mLoaderManager.initLoader(PROJECT_LOADER, bundle, this);
+            mLoaderManager.initLoader(PROJECT_LOADER, null, this);
         }else {
-            mLoaderManager.restartLoader(PROJECT_LOADER, bundle, this);
+            mLoaderManager.restartLoader(PROJECT_LOADER, savedInstanceState, this);
         }
         return view;
     }

@@ -59,10 +59,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         fm.beginTransaction().replace(R.id.main_content, fragment, fragment.getTag()).commit();
 
-
-
-
-
     }
 
     @Override
@@ -82,7 +78,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         FragmentManager fm = getSupportFragmentManager();
         switch (item.getItemId())
         {
-            case R.id.action_add_temp_data:
+            case R.id.action_add_temp_project:
                 ContentValues values = new ContentValues();
 
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, "test name");
@@ -97,13 +93,29 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 1);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "test project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\n");
                 Uri uri = getContentResolver().insert(DywContract.DywEntries.CONTENT_PROJECT_URI, values);
-                long id = 0;
+                long id;
                 if (uri != null){
                     id = ContentUris.parseId(uri);
-
                     Toast.makeText(context, "Data been Added " + id, Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.action_add_temp_entries:
+                ContentValues entryValue = new ContentValues();
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, 1);
+                long startTime = Calendar.getInstance().getTimeInMillis();
+                long endTime = startTime + 23800;
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startTime);
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, endTime);
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "");
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_OVER_TIME, 8*60*60);
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_BONUS, 35.50);
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION, "test Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \n");
+                Uri entryUri = getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entryValue);
+                long entryId;
+                if (entryUri != null){
+                    entryId = ContentUris.parseId(entryUri);
+                    Toast.makeText(context, "Entry been Added " + entryId, Toast.LENGTH_SHORT).show();
+                }
             case R.id.action_list_of_project:
                 Toast.makeText(context, "List of Project", Toast.LENGTH_SHORT).show();
                 fragment = ProjectsFragment.newInstance();
