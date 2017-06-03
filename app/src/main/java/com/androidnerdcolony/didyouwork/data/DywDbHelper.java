@@ -9,15 +9,15 @@ import com.androidnerdcolony.didyouwork.data.DywContract.DywEntries;
 import timber.log.Timber;
 
 /**
- * Created by pomkim on 5/14/17.
+ * Database Helper
  */
 
-public class DywDbHelper extends SQLiteOpenHelper {
+class DywDbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "Dyw_db";
     private static final int DB_VERSION = 1;
 
-    public DywDbHelper(Context context) {
+    DywDbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -46,6 +46,7 @@ public class DywDbHelper extends SQLiteOpenHelper {
                 DywEntries.COLUMN_ENTRIES_TAGS + " TEXT, " +
                 DywEntries.COLUMN_ENTRIES_OVER_TIME + " TEXT, " +
                 DywEntries.COLUMN_ENTRIES_BONUS + " REAL, " +
+                DywEntries.COLUMN_ENTRIES_ACTIVE + " INTEGER NOT NULL, " +
                 DywEntries.COLUMN_ENTRIES_DESCRIPTION + " TEXT " +
                 ");";
         Timber.d(CREATE_PROJECT_TABLE);

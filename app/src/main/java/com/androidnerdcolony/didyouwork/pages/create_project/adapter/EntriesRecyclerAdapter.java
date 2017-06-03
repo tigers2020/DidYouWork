@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.fragments.adapter;
+package com.androidnerdcolony.didyouwork.pages.create_project.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,13 +12,13 @@ import com.androidnerdcolony.didyouwork.R;
 import butterknife.ButterKnife;
 
 /**
- * Created by tiger on 5/25/2017.
+ * adapter for List of all Entries
  */
 
 public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecyclerAdapter.ViewHolder> {
 
-    Context context;
-    Cursor mCursor;
+    private Context context;
+    private Cursor mCursor;
 
     public EntriesRecyclerAdapter(Context context){
         this.context = context;
@@ -26,8 +26,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_entries, parent, false);
-        ViewHolder vh = new ViewHolder(view);
-        return vh;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -41,9 +40,14 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
         return 0;
     }
 
+    public void SwapCursor(Cursor data) {
+        mCursor = data;
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

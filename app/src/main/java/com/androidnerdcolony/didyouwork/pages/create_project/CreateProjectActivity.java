@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.activities;
+package com.androidnerdcolony.didyouwork.pages.create_project;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;

@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.fragments;
+package com.androidnerdcolony.didyouwork.pages.lists.fragments;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
-import com.androidnerdcolony.didyouwork.fragments.adapter.ProjectRecyclerAdapter;
+import com.androidnerdcolony.didyouwork.pages.lists.adater.ProjectRecyclerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,35 +28,6 @@ import butterknife.Unbinder;
  */
 
 public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
-
-    private static final String[] PROJECT_PROJECTION = {
-            DywContract.DywEntries._ID,
-            DywContract.DywEntries.COLUMN_PROJECT_NAME,
-            DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE,
-            DywContract.DywEntries.COLUMN_PROJECT_WAGE,
-            DywContract.DywEntries.COLUMN_PROJECT_LOCATION,
-            DywContract.DywEntries.COLUMN_PROJECT_TAGS,
-            DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE,
-            DywContract.DywEntries.COLUMN_PROJECT_WORK_TIME,
-            DywContract.DywEntries.COLUMN_PROJECT_TIME_ROUNDING,
-            DywContract.DywEntries.COLUMN_PROJECT_TYPE,
-            DywContract.DywEntries.COLUMN_PROJECT_LAST_ACTIVITY,
-            DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION
-    };
-
-    public static final int INDEX_PROJECT_ID = 0;
-    public static final int INDEX_PROJECT_NAME = 1;
-    public static final int INDEX_PROJECT_CREATED_DATE = 2;
-    public static final int INDEX_PROJECT_WAGE = 3;
-    public static final int INDEX_PROJECT_LOCATION = 4;
-    public static final int INDEX_PROJECT_TAGS = 5;
-    public static final int INDEX_PROJECT_DEAD_LINE = 6;
-    public static final int INDEX_PROJECT_WORK_TIME = 7;
-    public static final int INDEX_PROJECT_TIME_ROUNDING = 8;
-    public static final int INDEX_PROJECT_TYPE = 9;
-    public static final int INDEX_PROJECT_LAST_ACTIVITY = 10;
-    public static final int INDEX_PROJECT_DESCRIPTION = 11;
 
     public static final int PROJECT_LOADER = 11;
 
@@ -106,7 +77,7 @@ public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCa
         String[] selectArgs = new String[]{};
         String sortOrder = "";
 
-        return new CursorLoader(getContext(), queryUri, PROJECT_PROJECTION, selection, selectArgs, sortOrder);
+        return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.PROJECT_PROJECTION, selection, selectArgs, sortOrder);
     }
 
     @Override

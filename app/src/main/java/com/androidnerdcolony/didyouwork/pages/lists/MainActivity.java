@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.activities;
+package com.androidnerdcolony.didyouwork.pages.lists;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -19,9 +19,9 @@ import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
-import com.androidnerdcolony.didyouwork.fragments.EntriesFragment;
-import com.androidnerdcolony.didyouwork.fragments.MoreFragment;
-import com.androidnerdcolony.didyouwork.fragments.ProjectsFragment;
+import com.androidnerdcolony.didyouwork.pages.lists.fragments.EntriesFragment;
+import com.androidnerdcolony.didyouwork.pages.lists.fragments.ProjectsFragment;
+import com.androidnerdcolony.didyouwork.pages.lists.fragments.SettingsFragment;
 
 import java.util.Calendar;
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 break;
             case R.id.action_settings:
                 Toast.makeText(context, "List of Settings", Toast.LENGTH_SHORT).show();
-                fragment = MoreFragment.newInstance();
+                fragment = SettingsFragment.newInstance();
                 break;
             default:
                 fragment = ProjectsFragment.newInstance();

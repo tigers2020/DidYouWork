@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.fragments;
+package com.androidnerdcolony.didyouwork.pages.lists.fragments;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,31 +16,17 @@ import android.view.ViewGroup;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
-import com.androidnerdcolony.didyouwork.fragments.adapter.EntriesRecyclerAdapter;
+import com.androidnerdcolony.didyouwork.pages.create_project.adapter.EntriesRecyclerAdapter;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by tiger on 5/2/2017.
  */
 
 public class EntriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-
-    private static final String[] ENTRIES_PROJECTION = {
-            DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID,
-            DywContract.DywEntries.COLUMN_ENTRIES_START_DATE,
-            DywContract.DywEntries.COLUMN_ENTRIES_END_DATE,
-            DywContract.DywEntries.COLUMN_ENTRIES_TAGS,
-            DywContract.DywEntries.COLUMN_ENTRIES_BONUS,
-            DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION
-    };
-
-    public static final int INDEX_ENTRIES_PROJECT_ID = 0;
-    public static final int INDEX_ENTIRRES_START_DATE = 1;
-    public static final int INDEX_ENTRIES_END_DATE = 2;
-    public static final int INDEX_ENTRIES_TAGS = 3;
-    public static final int INDEX_ENTRIES_BOUNUS = 4;
-    public static final int INDEX_ENDTRIES_DESCRIPTION = 5;
 
 
     public static final int ENTRIES_LOADER = 21;
@@ -54,6 +40,7 @@ public class EntriesFragment extends Fragment implements LoaderManager.LoaderCal
     EntriesRecyclerAdapter mAdapter;
     LoaderManager mLoaderManager;
 
+    Unbinder mUnbinder;
     long projectId;
 
     public static EntriesFragment newInstance(){
@@ -62,11 +49,17 @@ public class EntriesFragment extends Fragment implements LoaderManager.LoaderCal
         return fragment;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entries, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
         if (savedInstanceState != null) {
             projectId = savedInstanceState.getInt(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID);
 
@@ -78,7 +71,7 @@ public class EntriesFragment extends Fragment implements LoaderManager.LoaderCal
 
         entriesListView.setAdapter(mAdapter);
         entriesListView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        mLoaderManager = getLoaderManager();
         Loader<Cursor> entriesLoader = mLoaderManager.getLoader(ENTRIES_LOADER);
         if (entriesLoader == null){
             mLoaderManager.initLoader(ENTRIES_LOADER, null, this);
@@ -105,11 +98,11 @@ public class EntriesFragment extends Fragment implements LoaderManager.LoaderCal
             case 0:
                 selection = "";
                 selectionArgs = new String[]{};
-                return new CursorLoader(getContext(), queryUri, ENTRIES_PROJECTION, selection, selectionArgs, sortOrder);
+                return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.ENTRIES_PROJECTION, selection, selectionArgs, sortOrder);
             case 1:
                 selection = DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(projectId)};
-                return new CursorLoader(getContext(), queryUri, ENTRIES_PROJECTION, selection, selectionArgs, sortOrder);
+                return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.ENTRIES_PROJECTION, selection, selectionArgs, sortOrder);
             default:
                 throw new RuntimeException("Loader Not implemented: " + id);
         }
@@ -117,11 +110,13 @@ public class EntriesFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.SwapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.SwapCursor(null);
 
     }
 }

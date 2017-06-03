@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.MainActivity"
+    tools:context=".pages.lists.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <RelativeLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"

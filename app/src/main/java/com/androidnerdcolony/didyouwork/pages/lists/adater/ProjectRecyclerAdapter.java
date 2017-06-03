@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.fragments.adapter;
+package com.androidnerdcolony.didyouwork.pages.lists.adater;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.activities.ProjectActivity;
 import com.androidnerdcolony.didyouwork.data.DywContract;
-import com.androidnerdcolony.didyouwork.fragments.ProjectsFragment;
+import com.androidnerdcolony.didyouwork.pages.project.ProjectActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,11 +41,11 @@ public class ProjectRecyclerAdapter extends RecyclerView.Adapter<ProjectRecycler
     public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
 
-        String projectName = mCursor.getString(ProjectsFragment.INDEX_PROJECT_NAME);
-        String location = mCursor.getString(ProjectsFragment.INDEX_PROJECT_LOCATION);
-        String type = mCursor.getString(ProjectsFragment.INDEX_PROJECT_TYPE);
-        String wage = mCursor.getString(ProjectsFragment.INDEX_PROJECT_WAGE);
-        String lastActivity = mCursor.getString(ProjectsFragment.INDEX_PROJECT_LAST_ACTIVITY);
+        String projectName = mCursor.getString(DywContract.DywProjection.INDEX_PROJECT_NAME);
+        String location = mCursor.getString(DywContract.DywProjection.INDEX_PROJECT_LOCATION);
+        String type = mCursor.getString(DywContract.DywProjection.INDEX_PROJECT_TYPE);
+        String wage = mCursor.getString(DywContract.DywProjection.INDEX_PROJECT_WAGE);
+        String lastActivity = mCursor.getString(DywContract.DywProjection.INDEX_PROJECT_LAST_ACTIVITY);
 
         holder.projectNameView.setText(projectName);
         holder.locationView.setText(location);
@@ -92,7 +91,7 @@ public class ProjectRecyclerAdapter extends RecyclerView.Adapter<ProjectRecycler
         @Override
         public void onClick(View v) {
             mCursor.moveToPosition(getLayoutPosition());
-            long projectId = mCursor.getLong(ProjectsFragment.INDEX_PROJECT_ID);
+            long projectId = mCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_ID);
             Toast.makeText(context, "projectId = " + projectId, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, ProjectActivity.class);
             intent.putExtra(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);

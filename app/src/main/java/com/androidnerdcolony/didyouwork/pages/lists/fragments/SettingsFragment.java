@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.fragments;
+package com.androidnerdcolony.didyouwork.pages.lists.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,18 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by tiger on 5/2/2017.
+ * Settings for entire application.
  */
 
-public class MoreFragment extends Fragment {
+public class SettingsFragment extends Fragment {
+    public static SettingsFragment newInstance() {
+        SettingsFragment fragment = new SettingsFragment();
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    public static MoreFragment newInstance(){
-        MoreFragment fragment = new MoreFragment();
-        return fragment;
     }
 }
