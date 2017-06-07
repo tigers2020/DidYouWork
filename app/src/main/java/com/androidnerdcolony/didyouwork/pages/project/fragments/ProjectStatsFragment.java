@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.DywContract;
@@ -35,13 +37,15 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
 
     final int EntriesLoader = 21;
     @BindView(R.id.project_name)
-    TextView ProjectNameView;
+    TextView projectNameView;
     @BindView(R.id.time_count)
-    TextView TimeCountView;
-    @BindView(R.id.project_start_stop)
-    ImageButton projectStartStopButton;
+    TextView timeCountView;
+    @BindView(R.id.entry_start)
+    ImageButton entryStartButton;
+    @BindView(R.id.entry_stop)
+    ImageButton entryStopButton;
     @BindView(R.id.project_wage)
-    TextView ProjectWageView;
+    TextView projectWageView;
     @BindView(R.id.start_time)
     TextView startTimeView;
     @BindView(R.id.end_time)
@@ -49,8 +53,33 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
     @BindView(R.id.work_time_progress)
     ProgressBar workTimeProgress;
 
+    ContentValues entriesValues;
     long projectId;
     Unbinder unBinder;
+
+    long startWorkTime;
+
+
+    Handler workTimeHandler;
+
+    int proLength;
+    Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            proLength = workTimeProgress.getProgress() + 1;
+            workTimeProgress.setProgress(proLength);
+            timeCountView.setText(String.valueOf(proLength));
+
+            if (proLength < workTimeProgress.getMax()) {
+                workTimeHandler.postDelayed(mRunnable, 1);
+            } else {
+                workTimeProgress.setProgress(0);
+                timeCountView.setText("0:00");
+                workTimeHandler.post(mRunnable);
+            }
+        }
+    };
+    Uri entryId;
 
     public static ProjectStatsFragment newInstance(long projectId) {
 
@@ -70,6 +99,8 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
         Timber.d("Project ID = " + projectId);
         unBinder = ButterKnife.bind(this, view);
 
+        entriesValues = new ContentValues();
+
         LoaderManager loaderManager = getLoaderManager();
 
         Loader<Cursor> entrisLoader = loaderManager.getLoader(EntriesLoader);
@@ -79,6 +110,8 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
         } else {
             loaderManager.restartLoader(EntriesLoader, savedInstanceState, this);
         }
+
+        workTimeHandler = new Handler();
 
         return view;
     }
@@ -106,41 +139,71 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
             String projectName = data.getString(DywContract.DywProjection.INDEX_PROJECT_NAME);
             double wage = data.getDouble(DywContract.DywProjection.INDEX_PROJECT_WAGE);
             final long workTime = data.getLong(DywContract.DywProjection.INDEX_PROJECT_WORK_TIME);
-            ProjectNameView.setText(projectName);
-            String wageString = NumberFormat.getCurrencyInstance().format(wage);
-            ProjectWageView.setText(wageString);
 
-            projectStartStopButton.setOnClickListener(new View.OnClickListener() {
+            workTimeProgress.setMax((int) workTime);
+            projectNameView.setText(projectName);
+            String wageString = NumberFormat.getCurrencyInstance().format(wage);
+            projectWageView.setText(wageString);
+
+            entryStartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Calendar c = Calendar.getInstance();
                     long startTimeLong = c.getTimeInMillis();
                     long endTimeLong = startTimeLong + workTime;
 
-                    String startTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " " + c.get(Calendar.AM_PM);
+                    String startTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " ";
                     c.setTimeInMillis(endTimeLong);
                     String endTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " " + c.get(Calendar.AM_PM);
 
                     startTimeView.setText(startTimeString);
                     endTimeView.setText(endTimeString);
 
-                    int progress = (int) workTime;
-
-                    workTimeProgress.setMax(progress);
-
-                    ContentValues entireValue = new ContentValues();
-
-                    entireValue.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
-                    entireValue.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startTimeLong);
-                    entireValue.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, endTimeLong);
-                    entireValue.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, true);
-
-                    getContext().getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entireValue);
+                    startProgressBar();
 
 
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startTimeLong);
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, endTimeLong);
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, true);
+
+                    entryStartButton.setVisibility(View.GONE);
+                    entryStopButton.setVisibility(View.VISIBLE);
+                }
+            });
+            entryStopButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, false);
+                    String[] selectionArgs = new String[]{};
+                    stopProgressBar();
+                    entryId = getContext().getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entriesValues);
+
+                    if (entryId != null) {
+                        Toast.makeText(getContext(), "Work Done, inster data complate", Toast.LENGTH_SHORT).show();
+                    }
+                    entryStopButton.setVisibility(View.GONE);
+                    entryStartButton.setVisibility(View.VISIBLE);
                 }
             });
         }
+
+    }
+
+
+    private void stopProgressBar() {
+        entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, System.currentTimeMillis());
+        workTimeHandler.removeCallbacks(mRunnable);
+        workTimeProgress.setProgress(0);
+        timeCountView.setText("0:00");
+    }
+
+    private void startProgressBar() {
+        startWorkTime = System.currentTimeMillis();
+        entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startWorkTime);
+        workTimeHandler.post(mRunnable);
 
     }
 

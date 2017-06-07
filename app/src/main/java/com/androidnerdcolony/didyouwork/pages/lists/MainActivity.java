@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_LOCATION, "[24, 52]");
                 long time = Calendar.getInstance().getTimeInMillis();
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE, time);
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_WORK_TIME, (6 * 60 * 60 * 100));
                 values.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "android, tag, etc");
                 long deadline = time + 13600;
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, deadline);
@@ -103,11 +104,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 ContentValues entryValue = new ContentValues();
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, 1);
                 long startTime = Calendar.getInstance().getTimeInMillis();
-                long endTime = startTime + 23800;
+                long endTime = startTime + 8 * 60 * 100;
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startTime);
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, endTime);
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "");
-                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_OVER_TIME, 8*60*60);
+                entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_OVER_TIME, 8 * 60 * 100);
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_BONUS, 35.50);
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION, "test Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \n");
                 Uri entryUri = getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entryValue);
@@ -116,6 +117,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     entryId = ContentUris.parseId(entryUri);
                     Toast.makeText(context, "Entry been Added " + entryId, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.action_delete_data:
+                getContentResolver().delete(DywContract.DywEntries.CONTENT_ENTRIES_URI, null, null);
+                getContentResolver().delete(DywContract.DywEntries.CONTENT_PROJECT_URI, null, null);
+                Toast.makeText(context, "All Data been Removed", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.action_list_of_project:
                 Toast.makeText(context, "List of Project", Toast.LENGTH_SHORT).show();
                 fragment = ProjectsFragment.newInstance();

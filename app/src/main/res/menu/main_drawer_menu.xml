@@ -18,6 +18,11 @@
         android:title="List of Project"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/action_delete_data"
+        android:enabled="true"
+        android:title="Delete All Data"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_entries_list"
         android:enabled="true"
         android:icon="@drawable/ic_entries"
