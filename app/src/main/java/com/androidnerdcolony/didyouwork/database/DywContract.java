@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.database;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -93,12 +93,13 @@ public class DywContract {
                 DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION
 
         };
-        public static final int INDEX_ENTRIES_PROJECT_ID = 0;
-        public static final int INDEX_ENTICES_START_DATE = 1;
-        public static final int INDEX_ENTRIES_END_DATE = 2;
-        public static final int INDEX_ENTRIES_TAGS = 3;
-        public static final int INDEX_ENTRIES_BOUNUS = 4;
-        public static final int INDEX_ENTRIES_ACTIVE = 5;
-        public static final int INDEX_ENTRIES_DESCRIPTION = 6;
+        public static final int INDEX_ENTRIES_ID = 0;
+        public static final int INDEX_ENTRIES_PROJECT_ID = 1;
+        public static final int INDEX_ENTICES_START_DATE = 2;
+        public static final int INDEX_ENTRIES_END_DATE = 3;
+        public static final int INDEX_ENTRIES_TAGS = 4;
+        public static final int INDEX_ENTRIES_BOUNUS = 5;
+        public static final int INDEX_ENTRIES_ACTIVE = 6;
+        public static final int INDEX_ENTRIES_DESCRIPTION = 7;
     }
 }

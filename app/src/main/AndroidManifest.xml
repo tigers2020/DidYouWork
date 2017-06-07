@@ -23,7 +23,7 @@
         </activity>
 
         <provider
-            android:name=".data.DywProvider"
+            android:name=".database.DywProvider"
             android:authorities="com.androidnerdcolony.didyouwork"
             android:exported="false"/>
 

@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract.DywEntries;
+import com.androidnerdcolony.didyouwork.database.DywContract.DywEntries;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
@@ -236,7 +236,7 @@ public class CreateProjectActivity extends AppCompatActivity{
                             timeString = "Per year";
                             break;
                         case 5:
-                            timeString = "Per Project";
+                            timeString = "Per ProjectDataStructure";
                             break;
                         default:
                             timeString = "";
@@ -319,10 +319,10 @@ public class CreateProjectActivity extends AppCompatActivity{
         String description = values.getAsString(DywEntries.COLUMN_PROJECT_DESCRIPTION);
 
         if (projectName.isEmpty() && TextUtils.equals(projectName, "")){
-            Toast.makeText(context, "You Must Enter the Project Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "You Must Enter the ProjectDataStructure Name", Toast.LENGTH_SHORT).show();
             return false;
         }if (projectWage == null && projectWage == 0.00){
-            Toast.makeText(context, "YOu Must Enter the Project Wage", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "YOu Must Enter the ProjectDataStructure Wage", Toast.LENGTH_SHORT).show();
             return false;
         }
 

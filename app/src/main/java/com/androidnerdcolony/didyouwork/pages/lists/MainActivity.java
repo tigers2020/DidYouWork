@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.EntriesFragment;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.ProjectsFragment;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.SettingsFragment;
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 long entryId;
                 if (entryUri != null){
                     entryId = ContentUris.parseId(entryUri);
-                    Toast.makeText(context, "Entry been Added " + entryId, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "EntryDataStructure been Added " + entryId, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.action_delete_data:
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 Toast.makeText(context, "All Data been Removed", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_list_of_project:
-                Toast.makeText(context, "List of Project", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "List of ProjectDataStructure", Toast.LENGTH_SHORT).show();
                 fragment = ProjectsFragment.newInstance();
                 break;
             case R.id.action_entries_list:

@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.pages.lists.adater.ProjectRecyclerAdapter;
 
 import butterknife.BindView;

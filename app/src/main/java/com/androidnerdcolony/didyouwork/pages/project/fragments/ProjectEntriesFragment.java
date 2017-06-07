@@ -8,13 +8,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.pages.project.adapter.EntriesRecyclerAdapter;
 
 import butterknife.BindView;
@@ -28,13 +29,13 @@ import butterknife.Unbinder;
 public class ProjectEntriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    final int ENTRIES_LOADER = 31;
     long projectId;
     Unbinder unBinder;
-
     EntriesRecyclerAdapter adapter;
-
     @BindView(R.id.entries_list)
     RecyclerView entriesListView;
+    LoaderManager mLoaderManager;
 
     public static ProjectEntriesFragment newInstance(long projectId) {
 
@@ -54,6 +55,18 @@ public class ProjectEntriesFragment extends Fragment implements LoaderManager.Lo
         unBinder = ButterKnife.bind(this, view);
         projectId = getArguments().getLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID);
         adapter = new EntriesRecyclerAdapter(getContext());
+        entriesListView.setAdapter(adapter);
+        entriesListView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mLoaderManager = getLoaderManager();
+
+        Loader<Cursor> entriesLoader = mLoaderManager.getLoader(ENTRIES_LOADER);
+
+        if (entriesLoader == null) {
+            mLoaderManager.initLoader(ENTRIES_LOADER, null, this);
+        } else {
+            mLoaderManager.restartLoader(ENTRIES_LOADER, savedInstanceState, this);
+        }
 
         return view;
     }
@@ -72,7 +85,7 @@ public class ProjectEntriesFragment extends Fragment implements LoaderManager.Lo
         String sortOrder = "";
 
 
-        return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.PROJECT_PROJECTION, selection, selectionArg, sortOrder);
+        return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.ENTRIES_PROJECTION, selection, selectionArg, sortOrder);
     }
 
     @Override

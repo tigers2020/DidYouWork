@@ -19,10 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 
 import java.text.NumberFormat;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,7 +98,7 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
         projectId = getArguments().getLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID);
-        Timber.d("Project ID = " + projectId);
+        Timber.d("ProjectDataStructure ID = " + projectId);
         unBinder = ButterKnife.bind(this, view);
 
         entriesValues = new ContentValues();
@@ -149,13 +151,18 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
                 @Override
                 public void onClick(View v) {
 
-                    Calendar c = Calendar.getInstance();
-                    long startTimeLong = c.getTimeInMillis();
+
+                    long startTimeLong = System.currentTimeMillis();
                     long endTimeLong = startTimeLong + workTime;
 
-                    String startTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " ";
-                    c.setTimeInMillis(endTimeLong);
-                    String endTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " " + c.get(Calendar.AM_PM);
+
+                    Timber.d("start Time : " + startTimeLong);
+                    Timber.d("end Time : " + endTimeLong);
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+
+                    String startTimeString = timeFormat.format(new Date(startTimeLong));
+
+                    String endTimeString = timeFormat.format(new Date(endTimeLong));
 
                     startTimeView.setText(startTimeString);
                     endTimeView.setText(endTimeString);
@@ -179,6 +186,7 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
                     entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, false);
                     String[] selectionArgs = new String[]{};
                     stopProgressBar();
+                    Timber.d(entriesValues.toString());
                     entryId = getContext().getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entriesValues);
 
                     if (entryId != null) {

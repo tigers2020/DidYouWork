@@ -10,9 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,25 +47,24 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
             long startTimeLong = mCursor.getLong(DywContract.DywProjection.INDEX_ENTICES_START_DATE);
             long endTimeLong = mCursor.getLong(DywContract.DywProjection.INDEX_ENTRIES_END_DATE);
             String description = mCursor.getString(DywContract.DywProjection.INDEX_ENTRIES_DESCRIPTION);
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(dateLong);
 
-            String dateString = c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+            String dateString = dateFormat.format(new Date(dateLong));
             holder.entryDateView.setText(dateString);
 
-            c.setTimeInMillis(startTimeLong);
-            String startTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " " + c.get(Calendar.AM_PM);
-            c.setTimeInMillis(endTimeLong);
-            String endTimeString = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + " " + c.get(Calendar.AM_PM);
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm a", Locale.getDefault());
+            String startTimeString = timeFormat.format(new Date(startTimeLong));
+            String endTimeString = timeFormat.format(new Date(endTimeLong));
 
             holder.startTimeView.setText(startTimeString);
             holder.endTimeView.setText(endTimeString);
 
             long workTimeLong = endTimeLong - startTimeLong;
 
-            int workTimeHour = (int) (workTimeLong / 60 / 60 / 60);
-            int workTimeMins = (int) (workTimeLong / 60 / 60);
-            String workTimeString = workTimeHour + ":" + workTimeMins;
+            SimpleDateFormat workTimeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+
+            String workTimeString = workTimeFormat.format(new Date(workTimeLong));
 
             holder.workTimeView.setText(workTimeString);
 
@@ -79,6 +80,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
 
     @Override
     public int getItemCount() {
+        if (mCursor == null) return 0;
         return mCursor.getCount();
     }
 

@@ -1,10 +1,10 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.androidnerdcolony.didyouwork.data.DywContract.DywEntries;
+import com.androidnerdcolony.didyouwork.database.DywContract.DywEntries;
 
 import timber.log.Timber;
 

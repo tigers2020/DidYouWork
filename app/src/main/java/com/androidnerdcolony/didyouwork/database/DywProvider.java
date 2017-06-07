@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.database;
 
 
 import android.content.ContentProvider;
@@ -13,11 +13,11 @@ import android.support.annotation.Nullable;
 
 import com.androidnerdcolony.didyouwork.R;
 
-import static com.androidnerdcolony.didyouwork.data.DywContract.CONTENT_AUTHORITY;
-import static com.androidnerdcolony.didyouwork.data.DywContract.PATH_ENTRIES;
-import static com.androidnerdcolony.didyouwork.data.DywContract.PATH_PROJECT;
-import static com.androidnerdcolony.didyouwork.data.DywContract.TABLE_ENTRIES;
-import static com.androidnerdcolony.didyouwork.data.DywContract.TABLE_PROJECT;
+import static com.androidnerdcolony.didyouwork.database.DywContract.CONTENT_AUTHORITY;
+import static com.androidnerdcolony.didyouwork.database.DywContract.PATH_ENTRIES;
+import static com.androidnerdcolony.didyouwork.database.DywContract.PATH_PROJECT;
+import static com.androidnerdcolony.didyouwork.database.DywContract.TABLE_ENTRIES;
+import static com.androidnerdcolony.didyouwork.database.DywContract.TABLE_PROJECT;
 
 /**
  * Created by pomkim on 5/14/17.
@@ -63,7 +63,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES:
                 return  insertEntries(uri, values);
             default:
-                throw new IllegalArgumentException("Failed to insert Project or Entries with " + match);
+                throw new IllegalArgumentException("Failed to insert ProjectDataStructure or Entries with " + match);
         }
     }
 
@@ -145,7 +145,7 @@ public class DywProvider extends ContentProvider {
                 delRow = db.delete(TABLE_ENTRIES, selection, selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Failed to delete Project or Entries with " + match);
+                throw new IllegalArgumentException("Failed to delete ProjectDataStructure or Entries with " + match);
 
         }
         if (delRow != 0) {
@@ -164,7 +164,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES_ID:
                 return updateEntry(uri, values, selection, selectionArgs);
             default:
-                throw new IllegalArgumentException("Failed to Update Project or Entries with " + uri);
+                throw new IllegalArgumentException("Failed to Update ProjectDataStructure or Entries with " + uri);
         }
     }
 

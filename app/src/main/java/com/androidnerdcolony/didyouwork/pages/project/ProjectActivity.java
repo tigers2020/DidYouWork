@@ -12,7 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.pages.project.fragments.ProjectEntriesFragment;
 import com.androidnerdcolony.didyouwork.pages.project.fragments.ProjectSettingsFragment;
 import com.androidnerdcolony.didyouwork.pages.project.fragments.ProjectStatsFragment;
@@ -50,7 +50,7 @@ public class ProjectActivity extends AppCompatActivity implements TabLayout.OnTa
 
         ProjectPageAdapter adapter = new ProjectPageAdapter(getSupportFragmentManager());
 
-        adapter.AddFragment(ProjectStatsFragment.newInstance(projectId), "Project");
+        adapter.AddFragment(ProjectStatsFragment.newInstance(projectId), "ProjectDataStructure");
         adapter.AddFragment(ProjectEntriesFragment.newInstance(projectId), "Entries");
         adapter.AddFragment(ProjectSettingsFragment.newInstance(projectId), "Settings");
         mViewPager.setAdapter(adapter);
