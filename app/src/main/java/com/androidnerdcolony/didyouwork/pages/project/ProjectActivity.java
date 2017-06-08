@@ -55,6 +55,7 @@ public class ProjectActivity extends AppCompatActivity implements TabLayout.OnTa
         adapter.AddFragment(ProjectSettingsFragment.newInstance(projectId), "Settings");
         mViewPager.setAdapter(adapter);
 
+        mViewPager.setOffscreenPageLimit(adapter.getCount());
         tabLayoutView.setupWithViewPager(mViewPager);
 
         tabLayoutView.addOnTabSelectedListener(this);

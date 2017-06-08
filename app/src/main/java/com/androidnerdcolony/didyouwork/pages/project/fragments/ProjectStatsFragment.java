@@ -70,7 +70,8 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
         public void run() {
             proLength = workTimeProgress.getProgress() + 1;
             workTimeProgress.setProgress(proLength);
-            timeCountView.setText(String.valueOf(proLength));
+            String workTimeCount = getWorkTime(startWorkTime);
+            timeCountView.setText(workTimeCount);
 
             if (proLength < workTimeProgress.getMax()) {
                 workTimeHandler.postDelayed(mRunnable, 1);
@@ -91,6 +92,19 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
         ProjectStatsFragment fragment = new ProjectStatsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private String getWorkTime(long startWorkTime) {
+
+        long currentWorkTime = System.currentTimeMillis() - startWorkTime;
+
+        int hour = (int) currentWorkTime / (60 * 60 * 1000) % 60;
+        int minutes = (int) (currentWorkTime / (60 * 1000)) % 60;
+        int seconds = (int) (currentWorkTime / 1000) % 60;
+
+        String workTimeString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minutes, seconds);
+
+        return workTimeString;
     }
 
     @Nullable
@@ -152,15 +166,15 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
                 public void onClick(View v) {
 
 
-                    long startTimeLong = System.currentTimeMillis();
-                    long endTimeLong = startTimeLong + workTime;
+                    startWorkTime = System.currentTimeMillis();
+                    long endTimeLong = startWorkTime + workTime;
 
 
-                    Timber.d("start Time : " + startTimeLong);
+                    Timber.d("start Time : " + startWorkTime);
                     Timber.d("end Time : " + endTimeLong);
                     SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
 
-                    String startTimeString = timeFormat.format(new Date(startTimeLong));
+                    String startTimeString = timeFormat.format(new Date(startWorkTime));
 
                     String endTimeString = timeFormat.format(new Date(endTimeLong));
 
@@ -171,7 +185,7 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
 
 
                     entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
-                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startTimeLong);
+                    entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, startWorkTime);
                     entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, endTimeLong);
                     entriesValues.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, true);
 
