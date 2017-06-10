@@ -25,7 +25,8 @@ import butterknife.ButterKnife;
 
 public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecyclerAdapter.ViewHolder> {
 
-    private Cursor mCursor;
+    private Cursor entriesCursor;
+    private Cursor projectCursor;
     private Context context;
 
     public EntriesRecyclerAdapter(Context context) {
@@ -42,11 +43,17 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (mCursor.moveToPosition(position)) {
-            long dateLong = mCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_CREATED_DATE);
-            long startTimeLong = mCursor.getLong(DywContract.DywProjection.INDEX_ENTICES_START_DATE);
-            long endTimeLong = mCursor.getLong(DywContract.DywProjection.INDEX_ENTRIES_END_DATE);
-            String description = mCursor.getString(DywContract.DywProjection.INDEX_ENTRIES_DESCRIPTION);
+        if (projectCursor != null) {
+            if (projectCursor.moveToFirst()) {
+                double hourlyWage = projectCursor.getDouble(DywContract.DywProjection.INDEX_PROJECT_WAGE);
+            }
+            
+        }
+        if (entriesCursor.moveToPosition(position)) {
+            long dateLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_CREATED_DATE);
+            long startTimeLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_ENTICES_START_DATE);
+            long endTimeLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_ENTRIES_END_DATE);
+            String description = entriesCursor.getString(DywContract.DywProjection.INDEX_ENTRIES_DESCRIPTION);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
             String dateString = dateFormat.format(new Date(dateLong));
@@ -64,7 +71,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
 
             SimpleDateFormat workTimeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
-            String workTimeString = workTimeFormat.format(new Date(workTimeLong));
+            String workTimeString = getWorkTimeStringFormat(workTimeLong);
 
             holder.workTimeView.setText(workTimeString);
 
@@ -78,14 +85,30 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
 
     }
 
-    @Override
-    public int getItemCount() {
-        if (mCursor == null) return 0;
-        return mCursor.getCount();
+    private String getWorkTimeStringFormat(long workTimeLong) {
+
+        int hour = (int) workTimeLong / (60 * 60 * 1000) % 60;
+        int minutes = (int) (workTimeLong / (60 * 1000)) % 60;
+        int seconds = (int) (workTimeLong / 1000) % 60;
+
+        String workTimeString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minutes, seconds);
+
+        return workTimeString;
     }
 
-    public void SwapCursor(Cursor cursor) {
-        mCursor = cursor;
+    @Override
+    public int getItemCount() {
+        if (entriesCursor == null) return 0;
+        return entriesCursor.getCount();
+    }
+
+    public void SwapEntriesCursor(Cursor cursor) {
+        entriesCursor = cursor;
+        notifyDataSetChanged();
+    }
+
+    public void SwapProjectCursor(Cursor cursor) {
+        projectCursor = cursor;
         notifyDataSetChanged();
     }
 

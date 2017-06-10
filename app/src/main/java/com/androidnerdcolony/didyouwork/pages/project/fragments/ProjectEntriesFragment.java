@@ -29,7 +29,8 @@ import butterknife.Unbinder;
 public class ProjectEntriesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
-    final int ENTRIES_LOADER = 31;
+    final int ENTRIES_LOADER = 41;
+    final int PROJECT_LOADER = 31;
     long projectId;
     Unbinder unBinder;
     EntriesRecyclerAdapter adapter;
@@ -61,11 +62,17 @@ public class ProjectEntriesFragment extends Fragment implements LoaderManager.Lo
         mLoaderManager = getLoaderManager();
 
         Loader<Cursor> entriesLoader = mLoaderManager.getLoader(ENTRIES_LOADER);
+        Loader<Cursor> projectLoader = mLoaderManager.getLoader(PROJECT_LOADER);
 
         if (entriesLoader == null) {
             mLoaderManager.initLoader(ENTRIES_LOADER, null, this);
         } else {
             mLoaderManager.restartLoader(ENTRIES_LOADER, savedInstanceState, this);
+        }
+        if (projectLoader == null) {
+            mLoaderManager.initLoader(PROJECT_LOADER, null, this);
+        } else {
+            mLoaderManager.restartLoader(PROJECT_LOADER, savedInstanceState, this);
         }
 
         return view;
@@ -79,27 +86,48 @@ public class ProjectEntriesFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri queryUri = DywContract.DywEntries.CONTENT_ENTRIES_URI;
-        String selection = DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID + "=?";
-        String[] selectionArg = new String[]{String.valueOf(projectId)};
-        String sortOrder = "";
-
-
-        return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.ENTRIES_PROJECTION, selection, selectionArg, sortOrder);
+        Uri queryUri;
+        String selection;
+        String[] selectionArgs;
+        String sortOrder;
+        switch (id) {
+            case PROJECT_LOADER:
+                queryUri = DywContract.DywEntries.CONTENT_PROJECT_URI.buildUpon().appendPath(String.valueOf(projectId)).build();
+                selection = "";
+                selectionArgs = new String[]{};
+                sortOrder = "";
+                return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.PROJECT_PROJECTION, selection, selectionArgs, sortOrder);
+            case ENTRIES_LOADER:
+                queryUri = DywContract.DywEntries.CONTENT_ENTRIES_URI;
+                selection = DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID + "=?";
+                selectionArgs = new String[]{String.valueOf(projectId)};
+                sortOrder = "";
+                return new CursorLoader(getContext(), queryUri, DywContract.DywProjection.ENTRIES_PROJECTION, selection, selectionArgs, sortOrder);
+            default:
+                throw new UnsupportedOperationException("Can not find Loader for : " + id);
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        int id = loader.getId();
 
-        entriesListView.setAdapter(adapter);
-
-        adapter.SwapCursor(data);
-
-
+        switch (id) {
+            case PROJECT_LOADER:
+                adapter.SwapProjectCursor(data);
+                break;
+            case ENTRIES_LOADER:
+                adapter.SwapEntriesCursor(data);
+                break;
+            default:
+                throw new RuntimeException("loader is not match with case : " + id);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.SwapCursor(null);
+
+        adapter.SwapEntriesCursor(null);
+        adapter.SwapProjectCursor(null);
     }
 }
