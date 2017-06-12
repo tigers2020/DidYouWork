@@ -15,5 +15,10 @@
     <string name="project_profit">Project Profit</string>
     <string name="tags">Tags</string>
     <string name="time_per_day">Time per day</string>
-    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="title_activity_project">ProjectActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="project_wage">Project Wage</string>
+    <string name="dead_line">Dead LIne</string>
 </resources>

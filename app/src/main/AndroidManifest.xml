@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".pages.lists.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -19,12 +19,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateProjectActivity">
+        <activity android:name=".pages.create_project.CreateProjectActivity">
         </activity>
+
         <provider
+            android:name=".database.DywProvider"
             android:authorities="com.androidnerdcolony.didyouwork"
-            android:exported="false"
-            android:name=".data.DywProvider"/>
+            android:exported="false"/>
+
+        <activity
+            android:name=".pages.project.ProjectActivity"
+            android:label="@string/title_activity_project"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

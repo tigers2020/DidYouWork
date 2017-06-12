@@ -1,4 +1,5 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.database;
+
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -9,11 +10,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
-import android.support.v4.graphics.drawable.DrawableWrapper;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.DywContract.DywEntries;
+
+import static com.androidnerdcolony.didyouwork.database.DywContract.CONTENT_AUTHORITY;
+import static com.androidnerdcolony.didyouwork.database.DywContract.PATH_ENTRIES;
+import static com.androidnerdcolony.didyouwork.database.DywContract.PATH_PROJECT;
+import static com.androidnerdcolony.didyouwork.database.DywContract.TABLE_ENTRIES;
+import static com.androidnerdcolony.didyouwork.database.DywContract.TABLE_PROJECT;
 
 /**
  * Created by pomkim on 5/14/17.
@@ -28,10 +32,10 @@ public class DywProvider extends ContentProvider {
     private static final int ENTRIES_ID = 201;
 
     static {
-        sUriMatcher.addURI(DywEntries.CONTENT_AUTHORITY, DywEntries.PATH_PROJECT, PROJECT);
-        sUriMatcher.addURI(DywEntries.CONTENT_AUTHORITY, DywEntries.PATH_PROJECT + "/#", PROJECT_ID);
-        sUriMatcher.addURI(DywEntries.CONTENT_AUTHORITY, DywEntries.PATH_ENTRIES, ENTRIES);
-        sUriMatcher.addURI(DywEntries.CONTENT_AUTHORITY, DywEntries.PATH_ENTRIES + "/#", ENTRIES_ID);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_PROJECT, PROJECT);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_PROJECT + "/#", PROJECT_ID);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_ENTRIES, ENTRIES);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_ENTRIES + "/#", ENTRIES_ID);
     }
 
     private DywDbHelper dbHelper;
@@ -59,7 +63,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES:
                 return  insertEntries(uri, values);
             default:
-                throw new IllegalArgumentException("Failed to insert Project or Entries with " + match);
+                throw new IllegalArgumentException("Failed to insert ProjectDataStructure or Entries with " + match);
         }
     }
 
@@ -67,7 +71,7 @@ public class DywProvider extends ContentProvider {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        long id = db.insert(DywEntries.TABLE_ENTRIES, null, values);
+        long id = db.insert(TABLE_ENTRIES, null, values);
         if (id != 0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -77,7 +81,7 @@ public class DywProvider extends ContentProvider {
     private Uri insertProject(Uri uri, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        long id = db.insert(DywEntries.TABLE_PROJECT, null, values);
+        long id = db.insert(TABLE_PROJECT, null, values);
         if (id != 0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -95,27 +99,27 @@ public class DywProvider extends ContentProvider {
 
         switch (match) {
             case PROJECT:
-                cursor = db.query(DywEntries.TABLE_PROJECT, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(TABLE_PROJECT, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PROJECT_ID:
-                selection = DywEntries._ID + "=?";
+                selection = DywContract.DywEntries._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = db.query(DywEntries.TABLE_PROJECT, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(TABLE_PROJECT, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case ENTRIES:
-                cursor = db.query(DywEntries.TABLE_ENTRIES, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(TABLE_ENTRIES, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case ENTRIES_ID:
-                selection = DywEntries._ID + "=?";
+                selection = DywContract.DywEntries._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = db.query(DywEntries.TABLE_ENTRIES, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(TABLE_ENTRIES, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new IllegalArgumentException(getContext().getString(R.string.cannot_query_unknown_uri) + uri);
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        return null;
+        return cursor;
     }
 
     @Override
@@ -125,23 +129,23 @@ public class DywProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         switch (match) {
             case PROJECT:
-                delRow = db.delete(DywEntries.TABLE_PROJECT, selection, selectionArgs);
+                delRow = db.delete(DywContract.TABLE_PROJECT, selection, selectionArgs);
                 break;
             case PROJECT_ID:
-                selection = DywEntries._ID + "=?";
+                selection = DywContract.DywEntries._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                delRow = db.delete(DywEntries.TABLE_PROJECT, selection, selectionArgs);
+                delRow = db.delete(TABLE_PROJECT, selection, selectionArgs);
                 break;
             case ENTRIES:
-                delRow = db.delete(DywEntries.TABLE_ENTRIES, selection, selectionArgs);
+                delRow = db.delete(TABLE_ENTRIES, selection, selectionArgs);
                 break;
             case ENTRIES_ID:
-                selection = DywEntries._ID + "=?";
+                selection = DywContract.DywEntries._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                delRow = db.delete(DywEntries.TABLE_ENTRIES, selection, selectionArgs);
+                delRow = db.delete(TABLE_ENTRIES, selection, selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Failed to delete Project or Entries with " + match);
+                throw new IllegalArgumentException("Failed to delete ProjectDataStructure or Entries with " + match);
 
         }
         if (delRow != 0) {
@@ -160,7 +164,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES_ID:
                 return updateEntry(uri, values, selection, selectionArgs);
             default:
-                throw new IllegalArgumentException("Failed to Update Project or Entries with " + uri);
+                throw new IllegalArgumentException("Failed to Update ProjectDataStructure or Entries with " + uri);
         }
     }
 
@@ -168,7 +172,7 @@ public class DywProvider extends ContentProvider {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        int updateRow = db.update(DywEntries.TABLE_ENTRIES, values, selection, selectionArgs);
+        int updateRow = db.update(TABLE_ENTRIES, values, selection, selectionArgs);
 
         if (updateRow != 0){
             getContext().getContentResolver().notifyChange(uri, null);
@@ -179,7 +183,7 @@ public class DywProvider extends ContentProvider {
     private int updateProject(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int updateRow = db.update(DywEntries.TABLE_PROJECT, values, selection, selectionArgs);
+        int updateRow = db.update(TABLE_PROJECT, values, selection, selectionArgs);
 
         if (updateRow != 0){
             getContext().getContentResolver().notifyChange(uri, null);
