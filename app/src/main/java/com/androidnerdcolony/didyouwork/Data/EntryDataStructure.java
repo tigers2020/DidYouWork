@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.Data;
+package com.androidnerdcolony.didyouwork.data;
 
 /**
  * Created by tiger on 6/7/2017.
@@ -7,7 +7,7 @@ package com.androidnerdcolony.didyouwork.Data;
 public class EntryDataStructure {
 
     private long _id;
-    private String project_id;
+    private long project_id;
     private long start_date;
     private long end_date;
     private String tags;
@@ -20,7 +20,7 @@ public class EntryDataStructure {
     public EntryDataStructure() {
     }
 
-    public EntryDataStructure(long id, String project_id, long start_date, long end_date, String tags, long over_time, double bonus, int active, String description) {
+    public EntryDataStructure(long id, long project_id, long start_date, long end_date, String tags, long over_time, double bonus, int active, String description) {
         _id = id;
         this.project_id = project_id;
         this.start_date = start_date;
@@ -40,11 +40,11 @@ public class EntryDataStructure {
         this._id = _id;
     }
 
-    public String getProject_id() {
+    public long getProject_id() {
         return project_id;
     }
 
-    public void setProject_id(String project_id) {
+    public void setProject_id(long project_id) {
         this.project_id = project_id;
     }
 

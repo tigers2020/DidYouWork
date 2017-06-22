@@ -1,4 +1,4 @@
-package com.androidnerdcolony.didyouwork.Data;
+package com.androidnerdcolony.didyouwork.data;
 
 /**
  * Created by tiger on 6/7/2017.
@@ -8,22 +8,23 @@ public class ProjectDataStructure {
 
     private long id;
     private String project_name;
-    private String create_date;
-    private String wage;
+    private long create_date;
+    private double wage;
     private String location;
     private String tags;
     private long dead_line;
-    private String work_time;
+    private long project_duration;
+    private long work_time;
     private int time_rounding;
     private int project_type;
     private long last_activity;
     private String description;
 
-    ProjectDataStructure() {
+    public ProjectDataStructure() {
 
     }
 
-    public ProjectDataStructure(long id, String project_name, String create_date, String wage, String location, String tags, long dead_line, String work_time, int time_rounding, int project_type, long last_activity, String description) {
+    public ProjectDataStructure(long id, String project_name, long create_date, double wage, String location, String tags, long dead_line, long project_duration, long work_time, int time_rounding, int project_type, long last_activity, String description) {
         this.id = id;
 
         this.project_name = project_name;
@@ -32,6 +33,7 @@ public class ProjectDataStructure {
         this.location = location;
         this.tags = tags;
         this.dead_line = dead_line;
+        this.project_duration = project_duration;
         this.work_time = work_time;
         this.time_rounding = time_rounding;
         this.project_type = project_type;
@@ -56,19 +58,19 @@ public class ProjectDataStructure {
         this.project_name = project_name;
     }
 
-    public String getCreate_date() {
+    public long getCreate_date() {
         return create_date;
     }
 
-    public void setCreate_date(String create_date) {
+    public void setCreate_date(long create_date) {
         this.create_date = create_date;
     }
 
-    public String getWage() {
+    public double getWage() {
         return wage;
     }
 
-    public void setWage(String wage) {
+    public void setWage(double wage) {
         this.wage = wage;
     }
 
@@ -128,11 +130,19 @@ public class ProjectDataStructure {
         this.description = description;
     }
 
-    public String getWork_time() {
+    public long getWork_time() {
         return work_time;
     }
 
-    public void setWork_time(String work_time) {
+    public void setWork_time(long work_time) {
         this.work_time = work_time;
+    }
+
+    public long getProject_duration() {
+        return project_duration;
+    }
+
+    public void setProject_duration(long project_duration) {
+        this.project_duration = project_duration;
     }
 }

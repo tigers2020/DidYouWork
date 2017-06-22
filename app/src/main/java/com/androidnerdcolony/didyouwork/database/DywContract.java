@@ -12,8 +12,10 @@ public class DywContract {
     static final String CONTENT_AUTHORITY = "com.androidnerdcolony.didyouwork";
     static final String PATH_PROJECT = "project";
     static final String PATH_ENTRIES = "entries";
+    static final String PATH_PROJECT_ENTRIES = PATH_PROJECT + "_" + PATH_ENTRIES;
     static final String TABLE_PROJECT = PATH_PROJECT;
     static final String TABLE_ENTRIES = PATH_ENTRIES;
+    static final String TABLE_PROJECT_ENTRIES = PATH_PROJECT_ENTRIES;
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -25,6 +27,7 @@ public class DywContract {
 
         public static final Uri CONTENT_PROJECT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PROJECT).build();
         public static final Uri CONTENT_ENTRIES_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ENTRIES).build();
+        public static final Uri CONTENT_POROJECT_ENTIRES_URI = BASE_CONTENT_URI.buildUpon().appendEncodedPath(PATH_PROJECT_ENTRIES).build();
 
         public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROJECT;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROJECT;
@@ -36,6 +39,7 @@ public class DywContract {
         public static final String COLUMN_PROJECT_TAGS = "tags";
         public static final String COLUMN_PROJECT_DEAD_LINE = "dead_line";
         public static final String COLUMN_PROJECT_WORK_TIME = "work_time";
+        public static final String COLUMN_PROJECT_DURATION = "duration";
         public static final String COLUMN_PROJECT_TIME_ROUNDING = "time_rounding";
         public static final String COLUMN_PROJECT_TYPE = "project_type";
         public static final String COLUMN_PROJECT_LAST_ACTIVITY = "last_activity";
@@ -50,6 +54,9 @@ public class DywContract {
         public static final String COLUMN_ENTRIES_ACTIVE = "active";
         public static final String COLUMN_ENTRIES_DESCRIPTION = "description";
 
+        public static final String COLUMN_PROJECT_ENTRIES_PROJECT_ID = "project_id";
+        public static final String COLUMN_PROJECT_ENTRIES_ENTRIES_ID = "entries_id";
+
     }
 
     public static final class DywProjection {
@@ -63,6 +70,7 @@ public class DywContract {
                 DywEntries.COLUMN_PROJECT_TAGS,
                 DywEntries.COLUMN_PROJECT_DEAD_LINE,
                 DywEntries.COLUMN_PROJECT_WORK_TIME,
+                DywEntries.COLUMN_PROJECT_DURATION,
                 DywEntries.COLUMN_PROJECT_TIME_ROUNDING,
                 DywEntries.COLUMN_PROJECT_TYPE,
                 DywEntries.COLUMN_PROJECT_LAST_ACTIVITY,
@@ -76,10 +84,11 @@ public class DywContract {
         public static final int INDEX_PROJECT_TAGS = 5;
         public static final int INDEX_PROJECT_DEAD_LINE = 6;
         public static final int INDEX_PROJECT_WORK_TIME = 7;
-        public static final int INDEX_PROJECT_TIME_ROUNDING = 8;
-        public static final int INDEX_PROJECT_TYPE = 9;
-        public static final int INDEX_PROJECT_LAST_ACTIVITY = 10;
-        public static final int INDEX_PROJECT_DESCRIPTION = 11;
+        public static final int INDEX_PROJECT_DURATION = 8;
+        public static final int INDEX_PROJECT_TIME_ROUNDING = 9;
+        public static final int INDEX_PROJECT_TYPE = 10;
+        public static final int INDEX_PROJECT_LAST_ACTIVITY = 11;
+        public static final int INDEX_PROJECT_DESCRIPTION = 12;
 
 
         public static final String[] ENTRIES_PROJECTION = new String[]{

@@ -31,6 +31,7 @@ class DywDbHelper extends SQLiteOpenHelper {
                 DywEntries.COLUMN_PROJECT_LOCATION + " TEXT NOT NULL, " +
                 DywEntries.COLUMN_PROJECT_CREATED_DATE + " INTEGER NOT NULL, " +
                 DywEntries.COLUMN_PROJECT_TYPE + " INTEGER NOT NULL, " +
+                DywEntries.COLUMN_PROJECT_DURATION + " INTEGER NOT NULL, " +
                 DywEntries.COLUMN_PROJECT_WORK_TIME + " INTEGER, " +
                 DywEntries.COLUMN_PROJECT_LAST_ACTIVITY + " INTEGER, " +
                 DywEntries.COLUMN_PROJECT_TAGS + " TEXT NOT NULL, " +
@@ -49,11 +50,17 @@ class DywDbHelper extends SQLiteOpenHelper {
                 DywEntries.COLUMN_ENTRIES_ACTIVE + " INTEGER NOT NULL, " +
                 DywEntries.COLUMN_ENTRIES_DESCRIPTION + " TEXT " +
                 ");";
+
+        String CREATE_PROJECT_ENTRY_TABLE = "CREATE TABLE " +
+                DywEntries._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                DywEntries.COLUMN_PROJECT_ENTRIES_PROJECT_ID + " INTEGER NOT NULL, " +
+                DywEntries.COLUMN_PROJECT_ENTRIES_ENTRIES_ID + " INTEGER NOT NULL, " +
+                ");";
         Timber.d(CREATE_PROJECT_TABLE);
         Timber.d(CREATE_ENTRIES_TABLE);
         db.execSQL(CREATE_PROJECT_TABLE);
         db.execSQL(CREATE_ENTRIES_TABLE);
-
+        db.execSQL(CREATE_PROJECT_ENTRY_TABLE);
     }
 
     @Override
