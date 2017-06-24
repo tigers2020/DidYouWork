@@ -22,9 +22,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by tiger on 6/2/2017.
- */
+
 
 public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecyclerAdapter.ViewHolder> {
 
@@ -56,7 +54,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
                 projectDataStructure = DywDataManager.ConvertToProjectData(projectCursor);
                 double hourlyWage = projectCursor.getDouble(DywContract.DywProjection.INDEX_PROJECT_WAGE);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-                long dateLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_CREATED_DATE);
+                long dateLong = projectCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_CREATED_DATE);
 
                 String dateString = dateFormat.format(new Date(dateLong));
                 holder.entryDateView.setText(dateString);
@@ -104,9 +102,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
         int minutes = (int) (workTimeLong / (60 * 1000)) % 60;
         int seconds = (int) (workTimeLong / 1000) % 60;
 
-        String workTimeString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minutes, seconds);
-
-        return workTimeString;
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minutes, seconds);
     }
 
     @Override
@@ -140,7 +136,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
         @BindView(R.id.description)
         TextView descriptionView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

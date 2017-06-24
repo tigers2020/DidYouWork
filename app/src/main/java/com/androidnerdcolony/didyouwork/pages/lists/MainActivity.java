@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        Fragment fragment = fragment = ProjectsFragment.newInstance();
+        Fragment fragment = null;
 
         FragmentManager fm = getSupportFragmentManager();
         switch (item.getItemId())
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, deadline);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TIME_ROUNDING, 30);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 1);
+                long duration = time + DateUtils.DAY_IN_MILLIS;
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_DURATION, duration);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "test project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\n");
                 Uri uri = getContentResolver().insert(DywContract.DywEntries.CONTENT_PROJECT_URI, values);
                 long id;
@@ -139,8 +142,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 fragment = ProjectsFragment.newInstance();
                 break;
         }
-        fm.beginTransaction().replace(R.id.main_content, fragment, fragment.getTag()).commit();
-
+        if (fragment != null) {
+            fm.beginTransaction().replace(R.id.main_content, fragment, fragment.getTag()).commit();
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

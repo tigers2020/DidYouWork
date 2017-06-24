@@ -51,10 +51,10 @@ class DywDbHelper extends SQLiteOpenHelper {
                 DywEntries.COLUMN_ENTRIES_DESCRIPTION + " TEXT " +
                 ");";
 
-        String CREATE_PROJECT_ENTRY_TABLE = "CREATE TABLE " +
+        String CREATE_PROJECT_ENTRY_TABLE = "CREATE TABLE " + DywContract.TABLE_PROJECT_ENTRIES + "(" +
                 DywEntries._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DywEntries.COLUMN_PROJECT_ENTRIES_PROJECT_ID + " INTEGER NOT NULL, " +
-                DywEntries.COLUMN_PROJECT_ENTRIES_ENTRIES_ID + " INTEGER NOT NULL, " +
+                DywEntries.COLUMN_PROJECT_ENTRIES_ENTRIES_ID + " INTEGER NOT NULL " +
                 ");";
         Timber.d(CREATE_PROJECT_TABLE);
         Timber.d(CREATE_ENTRIES_TABLE);

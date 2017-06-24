@@ -15,14 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.data.ProjectDataStructure;
 import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.database.DywDataManager;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -37,16 +35,8 @@ import butterknife.Unbinder;
 
 public class ProjectSettingsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    long projectId;
-
-    public static ProjectSettingsFragment newInstance(long projectId) {
-
-        Bundle args = new Bundle();
-        args.putLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
-        ProjectSettingsFragment fragment = new ProjectSettingsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private final static int PROJECT_LOADER = 101;
+    long projectId = -1;
     Unbinder unbinder;
     @BindView(R.id.project_name)
     EditText projectNameView;
@@ -60,28 +50,18 @@ public class ProjectSettingsFragment extends Fragment implements LoaderManager.L
     EditText workTimeView;
     @BindView(R.id.tags)
     EditText tagsView;
-    @BindView(R.id.tag_list)
+    @BindView(R.id.layout_tags)
     LinearLayout tagListView;
     @BindView(R.id.description)
     EditText descriptionView;
 
-    private final static int PROJECT_LOADER = 101;
+    public static ProjectSettingsFragment newInstance(long projectId) {
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        projectId = savedInstanceState.getLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, -1);
-
-        LoaderManager loaderManager = getLoaderManager();
-
-        Loader<Cursor> projectLoader = loaderManager.getLoader(PROJECT_LOADER);
-
-        if (projectLoader == null) {
-            loaderManager.initLoader(PROJECT_LOADER, null, this);
-        }else {
-            loaderManager.restartLoader(PROJECT_LOADER, savedInstanceState, this);
-        }
+        Bundle args = new Bundle();
+        args.putLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, projectId);
+        ProjectSettingsFragment fragment = new ProjectSettingsFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
@@ -90,9 +70,24 @@ public class ProjectSettingsFragment extends Fragment implements LoaderManager.L
         View view = inflater.inflate(R.layout.settings_project, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        if (savedInstanceState != null) {
+            projectId = savedInstanceState.getLong(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, -1);
+        }
+
+        if (projectId != -1) {
+            LoaderManager loaderManager = getLoaderManager();
+
+            Loader<Cursor> projectLoader = loaderManager.getLoader(PROJECT_LOADER);
+
+            if (projectLoader == null) {
+                loaderManager.initLoader(PROJECT_LOADER, null, this);
+            } else {
+                loaderManager.restartLoader(PROJECT_LOADER, savedInstanceState, this);
+            }
+        }
         String[] projectTypeArray = getResources().getStringArray(R.array.array_wage_type);
         List<String> projectTypeArrayList = Arrays.asList(projectTypeArray);
-        ArrayAdapter<String> projectTypeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, projectTypeArrayList );
+        ArrayAdapter<String> projectTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, projectTypeArrayList);
         projectTypeSpinner.setAdapter(projectTypeAdapter);
 
         return view;
@@ -120,19 +115,38 @@ public class ProjectSettingsFragment extends Fragment implements LoaderManager.L
         if (data.moveToFirst()){
             ProjectDataStructure projectData = DywDataManager.ConvertToProjectData(data);
 
-            projectNameView.setText(projectData.getProject_name());
-            projectWageView.setText(String.valueOf(projectData.getWage()));
-            projectTypeSpinner.setSelection(projectData.getProject_type());
-            projectDurationView.setText(convertToDate(projectData.getProject_duration()));
-            descriptionView.setText(projectData.getDescription());
+            String projectName = "";
+            String projectWage = "";
+            int projectType = 0;
+            String duration = "";
+            String description = "";
+            if (projectData != null) {
+                projectName = projectData.getProject_name();
+                projectWage = String.valueOf(projectData.getWage());
+                projectType = projectData.getProject_type();
+                duration = convertToDate(projectData.getProject_duration());
+                description = projectData.getDescription();
+            }
+            projectNameView.setText(projectName);
+            projectWageView.setText(projectWage);
+            projectTypeSpinner.setSelection(projectType);
+            projectDurationView.setText(duration);
+            descriptionView.setText(description);
 
 
         }
 
     }
 
+    private String convertToTypeString(int project_type) {
+
+        List<String> arrayList = Arrays.asList(getResources().getStringArray(R.array.array_wage_type));
+
+        return arrayList.get(project_type);
+    }
+
     private String convertToDate(long project_duration) {
-        String dateString = "";
+        String dateString;
 
         Date date = new Date(project_duration);
 
