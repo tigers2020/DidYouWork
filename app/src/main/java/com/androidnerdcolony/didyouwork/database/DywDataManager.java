@@ -30,8 +30,9 @@ public class DywDataManager {
         String projectName = "NO NAME";
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE, timeLong);
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, projectName);
-        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, timeLong);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, -1);
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "");
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_LOCATION, "");
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DURATION, duration);
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_LAST_ACTIVITY, timeLong);
         projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 0);

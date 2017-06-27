@@ -82,9 +82,10 @@
         android:layout_height="15dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:src="@drawable/ic_my_location_black_24dp"
         app:layout_constraintLeft_toRightOf="@+id/location"
         app:layout_constraintTop_toTopOf="@+id/label_location"
-        app:srcCompat="@android:drawable/ic_menu_mapmode"/>
+        />
 
     <EditText
         android:id="@+id/project_profit"

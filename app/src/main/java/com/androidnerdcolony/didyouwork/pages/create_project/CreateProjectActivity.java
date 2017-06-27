@@ -1,6 +1,7 @@
 package com.androidnerdcolony.didyouwork.pages.create_project;
 
 import android.app.DatePickerDialog;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.database.DywContract.DywEntries;
+import com.androidnerdcolony.didyouwork.database.DywDataManager;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
@@ -70,7 +72,7 @@ public class CreateProjectActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_project);
         context = this;
-        values = getDefautProjectValue();
+        values = DywDataManager.getDefaultProjectValue();
 
         ButterKnife.bind(this);
 
@@ -110,7 +112,7 @@ public class CreateProjectActivity extends AppCompatActivity{
                 if (!s.toString().equals(current)) {
                     projectWageView.removeTextChangedListener(this);
 
-                    String replaceable = String.format("[$s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
+                    String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
                     String cleanString = s.toString().replaceAll(replaceable, "");
 
                     double parsed;
@@ -315,7 +317,11 @@ public class CreateProjectActivity extends AppCompatActivity{
     private void createProject() {
 
         Uri uri = getContentResolver().insert(DywEntries.CONTENT_PROJECT_URI, values);
-        getContentResolver().notifyChange(uri, null);
+        if (uri != null) {
+            getContentResolver().notifyChange(uri, null);
+            Toast.makeText(context, "Project " + values.get(DywEntries.COLUMN_PROJECT_NAME) + " inserted : " + ContentUris.parseId(uri), Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void updateDate() {

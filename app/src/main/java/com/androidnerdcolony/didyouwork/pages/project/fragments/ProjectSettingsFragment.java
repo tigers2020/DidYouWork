@@ -113,7 +113,7 @@ public class ProjectSettingsFragment extends Fragment implements LoaderManager.L
                 if (!s.toString().equals(current)) {
 
                     projectWageView.removeTextChangedListener(this);
-                    String replaceable = String.format("[$s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
+                    String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
                     String cleanString = s.toString().replaceAll(replaceable, "");
 
                     double parsed;
