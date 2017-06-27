@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +70,7 @@ public class CreateProjectActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_project);
         context = this;
-        values = new ContentValues();
+        values = getDefautProjectValue();
 
         ButterKnife.bind(this);
 
@@ -181,7 +182,7 @@ public class CreateProjectActivity extends AppCompatActivity{
 
                     values.put(DywEntries.COLUMN_PROJECT_WORK_TIME, timeMillis);
 
-                    String formatted = String.format("%d:%02d", hour, min);
+                    String formatted = String.format(Locale.getDefault(), "%d:%02d", hour, min);
                     Timber.d("formatted" + formatted);
                     currentTime = formatted;
                     projectTimePerDayView.setText(currentTime);
@@ -217,36 +218,18 @@ public class CreateProjectActivity extends AppCompatActivity{
 
     private void setWageSpinner() {
         wageTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                List<String> wageList = Arrays.asList(getResources().getStringArray(R.array.array_wage_type));
+                String wageType;
                 values.put(DywEntries.COLUMN_PROJECT_TYPE, position);
-                String timeString;
                 if (position != 0) {
-                    switch (position) {
-                        case 1:
-                            timeString = "Per Hour";
-                            break;
-                        case 2:
-                            timeString = "Per Week";
-                            break;
-                        case 3:
-                            timeString = "Per Month";
-                            break;
-                        case 4:
-                            timeString = "Per year";
-                            break;
-                        case 5:
-                            timeString = "Per ProjectDataStructure";
-                            break;
-                        default:
-                            timeString = "";
-                            break;
-                    }
+                    wageType = wageList.get(position);
                     if (position == 5) {
-                        timeString = "Dead Line";
                         labelTimePerView.setText("Dead Line");
                     } else {
-                        labelTimePerView.setText(timeString);
+                        labelTimePerView.setText(wageType);
                     }
                 }
 

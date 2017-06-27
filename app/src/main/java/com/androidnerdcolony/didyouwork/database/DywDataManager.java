@@ -5,10 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.widget.Toast;
+import android.text.format.DateUtils;
 
 import com.androidnerdcolony.didyouwork.data.EntryDataStructure;
 import com.androidnerdcolony.didyouwork.data.ProjectDataStructure;
+
+import java.util.Date;
 
 import timber.log.Timber;
 
@@ -18,6 +20,45 @@ import timber.log.Timber;
 
 public class DywDataManager {
 
+    public static ContentValues getDefaultProjectValue() {
+        ContentValues projectValue = new ContentValues();
+        Date date = new Date();
+        long timeLong = date.getTime();
+        long duration = DateUtils.DAY_IN_MILLIS;
+        long workTime = DateUtils.HOUR_IN_MILLIS * 8;
+        double wage = 0;
+        String projectName = "NO NAME";
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE, timeLong);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, projectName);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, timeLong);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "");
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_DURATION, duration);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_LAST_ACTIVITY, timeLong);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 0);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_WORK_TIME, workTime);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_TAGS, "");
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_WAGE, wage);
+        projectValue.put(DywContract.DywEntries.COLUMN_PROJECT_TIME_ROUNDING, 0);
+
+        return projectValue;
+    }
+
+    public static ContentValues getDefaultEntryValue() {
+        ContentValues entryValue = new ContentValues();
+        Date date = new Date();
+        long timeLong = date.getTime();
+        long overTime = DateUtils.HOUR_IN_MILLIS * 8;
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_ACTIVE, 0);
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_BONUS, "");
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION, "");
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_END_DATE, timeLong);
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_OVER_TIME, overTime);
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, -1);
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_START_DATE, timeLong);
+        entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "");
+
+        return entryValue;
+    }
     public static ProjectDataStructure ConvertToProjectData(Cursor cursor){
 
         ProjectDataStructure dataStructure = new ProjectDataStructure();

@@ -29,7 +29,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     @BindView(R.id.drawer_layout)
@@ -37,9 +37,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
-            NavigationView navigationView;
+    NavigationView navigationView;
 
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         //// TODO: 5/1/2017 Design layouts
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -64,9 +65,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         Fragment fragment = null;
 
         FragmentManager fm = getSupportFragmentManager();
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_add_temp_project:
                 ContentValues values = new ContentValues();
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DESCRIPTION, "test project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\ntest project is long long description.\n");
                 Uri uri = getContentResolver().insert(DywContract.DywEntries.CONTENT_PROJECT_URI, values);
                 long id;
-                if (uri != null){
+                if (uri != null) {
                     id = ContentUris.parseId(uri);
                     Toast.makeText(context, "Data been Added " + id, Toast.LENGTH_SHORT).show();
                 }
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_DESCRIPTION, "test Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \ntest Entries long long description \n");
                 Uri entryUri = getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entryValue);
                 long entryId;
-                if (entryUri != null){
+                if (entryUri != null) {
                     entryId = ContentUris.parseId(entryUri);
                     Toast.makeText(context, "EntryDataStructure been Added " + entryId, Toast.LENGTH_SHORT).show();
                 }

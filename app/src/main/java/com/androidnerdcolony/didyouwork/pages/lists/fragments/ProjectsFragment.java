@@ -1,5 +1,6 @@
 package com.androidnerdcolony.didyouwork.pages.lists.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.database.DywContract;
+import com.androidnerdcolony.didyouwork.pages.create_project.CreateProjectActivity;
 import com.androidnerdcolony.didyouwork.pages.lists.adater.ProjectRecyclerAdapter;
 
 import butterknife.BindView;
@@ -61,6 +63,15 @@ public class ProjectsFragment extends Fragment implements LoaderManager.LoaderCa
         }else {
             mLoaderManager.restartLoader(PROJECT_LOADER, savedInstanceState, this);
         }
+
+        createNewProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CreateProjectActivity.class);
+                startActivity(intent);
+
+            }
+        });
         return view;
     }
 

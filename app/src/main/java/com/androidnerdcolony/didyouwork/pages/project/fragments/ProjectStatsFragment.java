@@ -210,7 +210,7 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
                     entryId = getContext().getContentResolver().insert(DywContract.DywEntries.CONTENT_ENTRIES_URI, entriesValues);
 
                     if (entryId != null) {
-                        Toast.makeText(getContext(), "Work Done, inster data complate", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Work Done, insert data complete", Toast.LENGTH_SHORT).show();
                     }
                     entryStopButton.setVisibility(View.GONE);
                     entryStartButton.setVisibility(View.VISIBLE);
