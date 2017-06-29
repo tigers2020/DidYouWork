@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.TimeUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
 import com.androidnerdcolony.didyouwork.database.DywContract;
+import com.androidnerdcolony.didyouwork.database.DywDataManager;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.EntriesFragment;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.ProjectsFragment;
 import com.androidnerdcolony.didyouwork.pages.lists.fragments.SettingsFragment;
@@ -80,16 +82,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fm = getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_add_temp_project:
-                ContentValues values = new ContentValues();
+                ContentValues values = DywDataManager.getDefaultProjectValue();
 
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_NAME, "test name");
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_WAGE, 24.50);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_LOCATION, "[24, 52]");
                 long time = Calendar.getInstance().getTimeInMillis();
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_CREATED_DATE, time);
-                values.put(DywContract.DywEntries.COLUMN_PROJECT_WORK_TIME, (6 * 60 * 60 * 100));
+                values.put(DywContract.DywEntries.COLUMN_PROJECT_WORK_TIME, (DateUtils.HOUR_IN_MILLIS * 8));
                 values.put(DywContract.DywEntries.COLUMN_ENTRIES_TAGS, "android, tag, etc");
-                long deadline = time + 13600;
+                long deadline = time + DateUtils.DAY_IN_MILLIS * 3;
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_DEAD_LINE, deadline);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TIME_ROUNDING, 30);
                 values.put(DywContract.DywEntries.COLUMN_PROJECT_TYPE, 1);
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case R.id.action_add_temp_entries:
-                ContentValues entryValue = new ContentValues();
+                ContentValues entryValue = DywDataManager.getDefaultEntryValue();
                 entryValue.put(DywContract.DywEntries.COLUMN_ENTRIES_PROJECT_ID, 1);
                 long startTime = Calendar.getInstance().getTimeInMillis();
                 long endTime = startTime + 8 * 60 * 100;

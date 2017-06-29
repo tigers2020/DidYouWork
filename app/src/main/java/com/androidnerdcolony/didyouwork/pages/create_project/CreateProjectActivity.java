@@ -34,6 +34,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -136,6 +138,8 @@ public class CreateProjectActivity extends AppCompatActivity{
         });
         projectTimePerDayView.addTextChangedListener(new TextWatcher() {
             String currentTime = "";
+            Timer timer = new Timer();
+            final int delay = 1000;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -149,48 +153,60 @@ public class CreateProjectActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 if (!s.toString().equals(currentTime)) {
-                    projectTimePerDayView.removeTextChangedListener(this);
-                    Timber.d("original" + s.toString());
-                    String replaceable = "[^\\d.]";
-                    String cleanString = s.toString().replaceAll(replaceable, "");
-                    Timber.d("cleaned" + cleanString);
+                    final String uncleanString = s.toString();
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    String formatted = "";
 
-                    double parsed;
-                    try {
-                        parsed = Integer.parseInt(cleanString);
-                    } catch (NumberFormatException e) {
-                        parsed = 0.00;
-                    }
+                                    String replaceable = "[^\\d.]";
+                                    String cleanString = uncleanString.replaceAll(replaceable, "");
+                                    formatted = parseNumberToTimeFormat(cleanString);
 
-                    Timber.d("parsed" + parsed);
-                    int hour = (int) parsed / 100;
-                    int min = (int) parsed - (hour * 100);
+                                    Timber.d("formatted" + formatted);
+                                    currentTime = formatted;
+                                    projectTimePerDayView.setText(currentTime);
+                                    projectTimePerDayView.setSelection(formatted.length());
+                                }
 
-                    if (parsed > 60) {
-                        if (min > 59) {
-                            hour = hour + (min / 60);
-                            min = min % 60;
-                        }
-
-                        if (hour > 24) {
-                            hour = 24;
-                            Toast.makeText(context, "You can't work more than 24 hours per day", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    long timeMillis = (hour * 60 * 60) + (min * 60);
-
-                    values.put(DywEntries.COLUMN_PROJECT_WORK_TIME, timeMillis);
-
-                    String formatted = String.format(Locale.getDefault(), "%d:%02d", hour, min);
-                    Timber.d("formatted" + formatted);
-                    currentTime = formatted;
-                    projectTimePerDayView.setText(currentTime);
-                    projectTimePerDayView.setSelection(formatted.length());
-                    projectTimePerDayView.addTextChangedListener(this);
+                            }, delay
+                    );
                 }
+            }
+
+            private String parseNumberToTimeFormat(String cleanString) {
+                double parsed;
+                try {
+                    parsed = Integer.parseInt(cleanString);
+                } catch (NumberFormatException e) {
+                    parsed = 0.00;
+                }
+                Timber.d("parsed" + parsed);
+                int hour = (int) parsed / 100;
+                int min = (int) parsed - (hour * 100);
+
+                if (parsed > 60) {
+                    if (min > 59) {
+                        hour = hour + (min / 60);
+                        min = min % 60;
+                    }
+
+                    if (hour > 24) {
+                        hour = 24;
+                        Toast.makeText(context, "You can't work more than 24 hours per day", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                long timeMillis = (hour * 60 * 60) + (min * 60);
+
+                values.put(DywEntries.COLUMN_PROJECT_WORK_TIME, timeMillis);
+
+                return String.format(Locale.getDefault(), "%d:%02d", hour, min);
+
             }
         });
 
