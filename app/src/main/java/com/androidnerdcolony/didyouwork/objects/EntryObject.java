@@ -1,7 +1,7 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.objects;
 
 
-public class EntryDataStructure {
+public class EntryObject {
 
     private long _id;
     private long project_id;
@@ -14,10 +14,10 @@ public class EntryDataStructure {
     private String description;
 
 
-    public EntryDataStructure() {
+    public EntryObject() {
     }
 
-    public EntryDataStructure(long id, long project_id, long start_date, long end_date, String tags, long over_time, double bonus, int active, String description) {
+    public EntryObject(long id, long project_id, long start_date, long end_date, String tags, long over_time, double bonus, int active, String description) {
         _id = id;
         this.project_id = project_id;
         this.start_date = start_date;

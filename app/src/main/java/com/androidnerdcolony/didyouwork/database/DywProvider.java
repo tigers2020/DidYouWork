@@ -63,7 +63,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES:
                 return  insertEntries(uri, values);
             default:
-                throw new IllegalArgumentException("Failed to insert ProjectDataStructure or Entries with " + match);
+                throw new IllegalArgumentException("Failed to insert ProjectObject or Entries with " + match);
         }
     }
 
@@ -145,7 +145,7 @@ public class DywProvider extends ContentProvider {
                 delRow = db.delete(TABLE_ENTRIES, selection, selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException("Failed to delete ProjectDataStructure or Entries with " + match);
+                throw new IllegalArgumentException("Failed to delete ProjectObject or Entries with " + match);
 
         }
         if (delRow != 0) {
@@ -164,7 +164,7 @@ public class DywProvider extends ContentProvider {
             case ENTRIES_ID:
                 return updateEntry(uri, values, selection, selectionArgs);
             default:
-                throw new IllegalArgumentException("Failed to Update ProjectDataStructure or Entries with " + uri);
+                throw new IllegalArgumentException("Failed to Update ProjectObject or Entries with " + uri);
         }
     }
 

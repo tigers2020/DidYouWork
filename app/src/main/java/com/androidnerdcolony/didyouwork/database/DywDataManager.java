@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.DateUtils;
 
-import com.androidnerdcolony.didyouwork.data.EntryDataStructure;
-import com.androidnerdcolony.didyouwork.data.ProjectDataStructure;
+import com.androidnerdcolony.didyouwork.objects.EntryObject;
+import com.androidnerdcolony.didyouwork.objects.ProjectObject;
 
 import java.util.Date;
 
@@ -60,9 +60,9 @@ public class DywDataManager {
 
         return entryValue;
     }
-    public static ProjectDataStructure ConvertToProjectData(Cursor cursor){
+    public static ProjectObject ConvertToProjectData(Cursor cursor){
 
-        ProjectDataStructure dataStructure = new ProjectDataStructure();
+        ProjectObject dataStructure = new ProjectObject();
 
         if (cursor.moveToFirst()){
 
@@ -83,8 +83,8 @@ public class DywDataManager {
         }
 
     }
-    public static EntryDataStructure ConvertToEntryData(Cursor cursor, int position){
-        EntryDataStructure dataStructure = new EntryDataStructure();
+    public static EntryObject ConvertToEntryData(Cursor cursor, int position){
+        EntryObject dataStructure = new EntryObject();
 
         if (cursor.moveToPosition(position)) {
             dataStructure.set_id(DywContract.DywProjection.INDEX_ENTRIES_ID);

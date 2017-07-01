@@ -118,7 +118,7 @@ public class ProjectStatsFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
-        Timber.d("ProjectDataStructure ID = " + projectId);
+        Timber.d("ProjectObject ID = " + projectId);
         unBinder = ButterKnife.bind(this, view);
 
         entriesValues = new ContentValues();

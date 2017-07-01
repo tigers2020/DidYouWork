@@ -10,8 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.EntryDataStructure;
-import com.androidnerdcolony.didyouwork.data.ProjectDataStructure;
+import com.androidnerdcolony.didyouwork.objects.EntryObject;
+import com.androidnerdcolony.didyouwork.objects.ProjectObject;
 import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.database.DywDataManager;
 
@@ -29,8 +29,8 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
     private Cursor entriesCursor;
     private Cursor projectCursor;
 
-    private ProjectDataStructure projectDataStructure;
-    private EntryDataStructure entryDataStructure;
+    private ProjectObject projectObject;
+    private EntryObject entryObject;
     private Context context;
 
     public EntriesRecyclerAdapter(Context context) {
@@ -42,8 +42,8 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_entries, parent, false);
         ViewHolder vh = new ViewHolder(view);
-        projectDataStructure = new ProjectDataStructure();
-        entryDataStructure = new EntryDataStructure();
+        projectObject = new ProjectObject();
+        entryObject = new EntryObject();
         return vh;
     }
 
@@ -51,7 +51,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (projectCursor != null) {
             if (projectCursor.moveToFirst()) {
-                projectDataStructure = DywDataManager.ConvertToProjectData(projectCursor);
+                projectObject = DywDataManager.ConvertToProjectData(projectCursor);
                 double hourlyWage = projectCursor.getDouble(DywContract.DywProjection.INDEX_PROJECT_WAGE);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
                 long dateLong = projectCursor.getLong(DywContract.DywProjection.INDEX_PROJECT_CREATED_DATE);
@@ -64,7 +64,7 @@ public class EntriesRecyclerAdapter extends RecyclerView.Adapter<EntriesRecycler
             
         }
         if (entriesCursor.moveToPosition(position)) {
-            entryDataStructure = DywDataManager.ConvertToEntryData(entriesCursor, position);
+            entryObject = DywDataManager.ConvertToEntryData(entriesCursor, position);
             long startTimeLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_ENTICES_START_DATE);
             long endTimeLong = entriesCursor.getLong(DywContract.DywProjection.INDEX_ENTRIES_END_DATE);
             String description = entriesCursor.getString(DywContract.DywProjection.INDEX_ENTRIES_DESCRIPTION);

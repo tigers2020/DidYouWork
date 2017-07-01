@@ -1,7 +1,7 @@
-package com.androidnerdcolony.didyouwork.data;
+package com.androidnerdcolony.didyouwork.objects;
 
 
-public class ProjectDataStructure {
+public class ProjectObject {
 
     private long id;
     private String project_name;
@@ -17,11 +17,11 @@ public class ProjectDataStructure {
     private long last_activity;
     private String description;
 
-    public ProjectDataStructure() {
+    public ProjectObject() {
 
     }
 
-    public ProjectDataStructure(long id, String project_name, long create_date, double wage, String location, String tags, long dead_line, long project_duration, long work_time, int time_rounding, int project_type, long last_activity, String description) {
+    public ProjectObject(long id, String project_name, long create_date, double wage, String location, String tags, long dead_line, long project_duration, long work_time, int time_rounding, int project_type, long last_activity, String description) {
         this.id = id;
 
         this.project_name = project_name;

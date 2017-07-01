@@ -50,7 +50,7 @@ public class ProjectActivity extends AppCompatActivity implements TabLayout.OnTa
 
         ProjectPageAdapter adapter = new ProjectPageAdapter(getSupportFragmentManager());
 
-        adapter.AddFragment(ProjectStatsFragment.newInstance(projectId), "ProjectDataStructure");
+        adapter.AddFragment(ProjectStatsFragment.newInstance(projectId), "ProjectObject");
         adapter.AddFragment(ProjectEntriesFragment.newInstance(projectId), "Entries");
         adapter.AddFragment(ProjectSettingsFragment.newInstance(projectId), "Settings");
         mViewPager.setAdapter(adapter);

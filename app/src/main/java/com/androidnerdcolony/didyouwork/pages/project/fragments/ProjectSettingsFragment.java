@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.androidnerdcolony.didyouwork.R;
-import com.androidnerdcolony.didyouwork.data.ProjectDataStructure;
+import com.androidnerdcolony.didyouwork.objects.ProjectObject;
 import com.androidnerdcolony.didyouwork.database.DywContract;
 import com.androidnerdcolony.didyouwork.database.DywDataManager;
 
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Fragment for Edit ProjectDataStructure details.
+ * Fragment for Edit ProjectObject details.
  */
 
 public class ProjectSettingsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -162,7 +162,7 @@ public class ProjectSettingsFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()){
-            ProjectDataStructure projectData = DywDataManager.ConvertToProjectData(data);
+            ProjectObject projectData = DywDataManager.ConvertToProjectData(data);
 
             String projectName = "";
             String projectWage = "";
